@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Learn the Web Audio API</title>
+        
+    </head>
+    
+    <body>
+        <button class='start'>Start</button>
+        <button class='stop'>Stop</button>
+        <button class='burst'>Burst</button>
+        <button class='drums'>Drums</button>
+        <button class='startLoop'>Play sequencer</button>
+        <button class='stopLoop'>Stop sequencer</button>
+    </body>
+    <script>
+        //oscillator paired with an envelope. Purpose : short notes.
+        class Oscillator {
+            constructor(audioContext, output) {
+                this.context = audioContext;
+                
+                this.osc = audioContext.createOscillator();
+                this.osc.type = "sine";
+                this.osc.frequency.value = frequencyFromNoteNumber(80);
+                this.osc.start();
+
+                this.envelope = context.createGain();
+                this.envelope.connect(output);
+                this.envelope.gain.value = 0;
+                
+                this.envelopeAD = [1, 0.01, 0, 0.2];
+
+                this.osc.connect(this.envelope);
+            }
+            
+            setFrequency(f) {
+                this.osc.frequency.value = f;
+            }
+            
+            setNote(note) {
+                this.setFrequency(frequencyFromNoteNumber(note));
+            }
+            
+            playNote(note) {
+                this.setNote(note);
+                this.linearAmplitudeBurst(context.currentTime, this.envelopeAD[0], this.envelopeAD[1], this.envelopeAD[2], this.envelopeAD[3]);
+            }
+            
+            playNoteAtTime(note, time) {
+                this.osc.frequency.setValueAtTime(frequencyFromNoteNumber(note), time);
+                this.linearAmplitudeBurst(time, this.envelopeAD[0], this.envelopeAD[1], this.envelopeAD[2], this.envelopeAD[3]);
+            }
+            
+            //Disconnects from all outputs !!!
+            connect(output) {
+                this.envelope.disconnect();
+                this.enveolope.connect(ouput);
+            }
+            
+            linearAmplitudeBurst(startTime, value1, attackLength, value2, decayTime) {
+
+                this.linearADSR(startTime, this.envelope.gain, value1, attackLength, value2, decayTime);
+            }
+            
+            linearADSR(startTime, audioParam, value1, time1, value2, time2) {
+                var now = startTime;
+                audioParam.cancelScheduledValues(now);
+                audioParam.linearRampToValueAtTime(value1, now + time1);
+                audioParam.linearRampToValueAtTime(value2, now + time1+time2);    
+            }
+            
+            /*frequencyFromNoteNumber(note) {
+                return 440 * Math.pow(2,(note-69)/12);
+            }*/
+        }
+        
+        function Modulator (type, freq, gain) {
+          this.osc = audioCtx.createOscillator();
+          this.gain = audioCtx.createGain();
+          this.osc.type = type;
+          this.osc.frequency.value = freq;
+          this.gain.gain.value = gain;
+          this.osc.connect(this.gain);
+          this.osc.start(0);
+        }
+        
+        class FMOscillator extends Oscillator {
+            constructor(audioContext, output) {
+                super(audioContext, output);
+                
+                this.modulator = new Oscillator(audioContext, output);
+                this.modulator.setFrequency(400);
+                this.modulator.envelope.disconnect();
+                this.modulator.envelope.connect(this.osc.frequency);
+                this.modulator.envelope.gain.value = 300;
+                
+              /*  this.modulator = audioContext.createOscillator();
+                this.modulator.frequency.value = 1;
+                this.modulator.start();
+                this.modulator.connect(this.osc.frequency);*/
+                
+//                this.modulator = new Modulator("sine", 500, 300);
+            }
+        }
+        
+        class PinkNoise {
+            constructor(audioContext, output) {
+                var bufferSize = 4096;
+                var pinkNoise = (function() {
+                    var b0, b1, b2, b3, b4, b5, b6;
+                    b0 = b1 = b2 = b3 = b4 = b5 = b6 = 0.0;
+                    var node = audioContext.createScriptProcessor(bufferSize, 1, 1);
+                    node.onaudioprocess = function(e) {
+                        var output = e.outputBuffer.getChannelData(0);
+                        for (var i = 0; i < bufferSize; i++) {
+                            var white = Math.random() * 2 - 1;
+                            b0 = 0.99886 * b0 + white * 0.0555179;
+                            b1 = 0.99332 * b1 + white * 0.0750759;
+                            b2 = 0.96900 * b2 + white * 0.1538520;
+                            b3 = 0.86650 * b3 + white * 0.3104856;
+                            b4 = 0.55000 * b4 + white * 0.5329522;
+                            b5 = -0.7616 * b5 - white * 0.0168980;
+                            output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+                            output[i] *= 0.11; // (roughly) compensate for gain
+                            b6 = white * 0.115926;
+                        }
+                    }
+                    return node;
+                })();
+                
+                this.envelope = audioContext.createGain();
+                this.envelope.gain.value = 0;
+
+                pinkNoise.connect(this.envelope);
+                this.envelope.connect(output);
+            }
+        }
+        
+        class WhiteNoise {
+            constructor(audioContext, audioOutput){
+                var bufferSize = 2 * audioContext.sampleRate,
+                    noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate),
+                    output = noiseBuffer.getChannelData(0);
+                for (var i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+
+                var whiteNoise = audioContext.createBufferSource();
+                whiteNoise.buffer = noiseBuffer;
+                whiteNoise.loop = true;
+                whiteNoise.start(0);
+                
+                this.envelope = audioContext.createGain();
+                this.envelope.gain.value = 0;
+                
+                this.filter = audioContext.createBiquadFilter();
+                this.filter.type = "highpass";
+                this.filter.frequency.value = 10000;
+                //filter.gain.value = 25;
+                
+                whiteNoise.connect(this.filter);
+                this.filter.connect(this.envelope);
+                this.envelope.connect(audioOutput);
+            }
+        }
+        
+        var startButton = document.querySelector('.start'),
+            stopButton = document.querySelector('.stop'),
+            burstButton = document.querySelector('.burst'),
+            drumsPlay = document.querySelector('.drums'),
+            startLoopButton = document.querySelector('.startLoop'),
+            stopLoopButton = document.querySelector('.stopLoop');        
+        
+        startButton.onclick = start;
+        stopButton.onclick = stop;
+        burstButton.onclick = fireBurst;
+//        drumsPlay.onclick = drumLoop;
+        startLoopButton.onclick = startLoop;
+        stopLoopButton.onclick = stopLoop;
+        
+        var masterGain,
+            sineEnvelope,
+            context,
+            sine,
+            kick, snare, hihat, testOsc, fmOsc,
+            sequencerInterval;
+        
+        
+        function launch() {
+            context = new (window.AudioContext || window.webkitAudioContext)();
+            
+            masterGain = context.createGain();
+            masterGain.connect(context.destination);
+            masterGain.gain.value = 0.2;
+
+            /*kick = context.createOscillator();
+            //kick.gain.value = 1;
+            kick.connect(masterGain);
+            kick.gain.value = 0;
+            kick.start();*/
+            
+            testOsc = new Oscillator(context, masterGain);
+            testOsc.setNote(25);
+            
+            fmOsc = new FMOscillator(context, masterGain);
+            
+            kick = new Oscillator(context, masterGain);
+            kick.osc.type = 'triangle';
+            kick.envelope.gain.value = 0;
+            kick.osc.frequency.value = frequencyFromNoteNumber(42);
+            
+            snare = new PinkNoise(context, masterGain);
+            
+            hihat = new WhiteNoise(context, masterGain);
+//            snare.osc.frequency.value = 
+        }
+        
+        //              //
+        //  SEQUENCER   //
+        //              //
+        
+        function startLoop() {
+            sequencer();
+            testOsc.setNote(60);
+        }
+        
+        function stopLoop() {
+            clearInterval(sequencerInterval);
+        }
+        
+        var bpm = 120;
+        var bps = bpm/60;
+        var beatLength = 1/bps;
+        var measureLength = 4*beatLength;
+        
+        function sequencer() {            
+            sequence(context.currentTime);
+            sequencerInterval = setInterval(
+                function(){ 
+                    sequence(context.currentTime); 
+                },
+                measureLength*1000);    //set interval is in ms
+        }
+        
+        function sequence(startTime) {
+            var barStart = context.currentTime;
+            var beatStart = barStart;
+            
+            //First beat
+            testOsc.linearADSR(beatStart, testOsc.osc.frequency, 220, 0.01, 50, 0.1);
+            testOsc.playNote(25);
+            
+            //Second beat
+            beatStart = beatStart+beatLength;
+            testOsc.linearADSR(beatStart, testOsc.osc.frequency, 220, 0.01, 50, 0.1);
+            testOsc.playNoteAtTime(25, beatStart);
+            
+            //Third beat
+            beatStart = beatStart+beatLength;
+            testOsc.linearADSR(beatStart, testOsc.osc.frequency, 220, 0.01, 50, 0.1);
+            testOsc.playNoteAtTime(25, beatStart);
+            
+            //Fourth beat
+            beatStart = beatStart+beatLength;
+            testOsc.linearADSR(beatStart, testOsc.osc.frequency, 220, 0.01, 50, 0.1);
+            testOsc.playNoteAtTime(25, beatStart);
+        }
+        
+        //                  //
+        //      BUTTONS     //
+        //                  //
+        
+        function start() {
+
+            fmOsc.playNote(60);
+        }
+        
+        function stop() {
+            //kick.envelope.gain.value = 0;
+        }
+
+        function fireBurst() {            
+            linearADSR(kick.envelope.gain, 1, 0.1, 0, 0.5);
+            linearADSR(kick.osc.frequency, 100, 0, 50, 0.5);
+        }
+        
+        function playOscillatorAtTime(oscillator, time) {
+            linearADSR(time, oscillator.envelope.gain, 1, 0, 0, 0.3);
+            linearADSR(time, oscillator.osc.frequency, 100, 0, 50, 0.3);
+        }
+        
+        function linearADSR(startTime, audioParam, value1, time1, value2, time2) {
+            var now = startTime;
+            audioParam.cancelScheduledValues(now);
+            audioParam.exponentialRampToValueAtTime(value1, now + time1);
+            audioParam.linearRampToValueAtTime(value2, now + time1+time2);    
+        }
+        
+        function playNoiseAtTime(oscillator, time) {
+            linearADSR(time, oscillator.envelope.gain, 1, 0, 0, 0.3);
+        }
+        
+
+        //              //
+        //  UTILITIES   //
+        //              //
+        
+        function frequencyFromNoteNumber( note ) {
+            return 440 * Math.pow(2,(note-69)/12);
+        }
+
+        function centsOffFromPitch( frequency, note ) {
+            return Math.floor( 1200 * Math.log( frequency / frequencyFromNoteNumber( note ))/Math.log(2) );
+        }
+        
+        
+        
+        launch();        
+    </script>
+</html>
