@@ -62,7 +62,13 @@ window.onload = function ()
             groupeDomestique[i].mouseDown(event.point);
             if( groupeDomestique[i].glisse)
             {
-                 groupeDomestique[i].trace01.bringToFront();
+                groupeDomestique[i].trace01.bringToFront();
+                var f = groupeDomestique[i];
+                jouerUnSonDeForme([
+                    [f.indexDeForme[0], 0, f.indexDeCouleur],
+                    [f.indexDeForme[1], 1, f.indexDeCouleur],
+                    [f.indexDeForme[2], 2, f.indexDeCouleur]
+                ]);
                 break;
             }
         }

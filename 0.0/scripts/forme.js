@@ -26,11 +26,17 @@ Forme.prototype.create= function()
     var _point;
     var _figureName;
     var _figureColor;
-    _figureColor =this.colors[Math.floor(Math.random()*4)];
+    this.indexDeCouleur = Math.floor(Math.random()*4);
+    _figureColor =this.colors[this.indexDeCouleur];
+    
+    this.indexDeForme = [];
+    
     for( var i = 0; i <3; i++)
     {
-
-        _figureName =this.figures[Math.floor(Math.random()*this.figures.length)];
+        var index = Math.floor(Math.random()*this.figures.length);
+        
+        this.indexDeForme.push(index);
+        _figureName = this.figures[index];
         
         figure = this.creationTrace(_figureName);
         figure.fillColor = _figureColor;

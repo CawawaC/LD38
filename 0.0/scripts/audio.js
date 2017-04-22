@@ -318,6 +318,7 @@ function jouerUnSonDePattern(figure, position, couleur, oscillo = 0) {
  ...]*/
 function jouerUnSonDeForme(superTableau) {
     for(var i = 0 ; i < superTableau.length ; ++i) {
+        console.info(superTableau[i][0]);
         jouerUnSonDePattern(
             superTableau[i][0],
             superTableau[i][1],
