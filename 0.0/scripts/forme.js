@@ -11,7 +11,7 @@ function Forme()
     this.vitesseY;
     this.touchable;
     this.glisse;
-    this.colors = ['red', 'blue', 'purple'];
+    this.colors = ['#140245', '#784537', '#478952'];
     this.figures = ['rond', 'carre', 'triangle'];
     this.paramForme = [];
 }
@@ -26,7 +26,7 @@ Forme.prototype.create= function()
     var _point;
     var _figureName;
     var _figureColor;
-    _figureColor =this.colors[Math.floor(Math.random()*4)];
+    _figureColor =this.colors[Math.floor(Math.random()*this.colors.length)];
     for( var i = 0; i <3; i++)
     {
 
@@ -46,7 +46,7 @@ Forme.prototype.create= function()
          this.paramForme[i].push(_figureColor);
         this.trace01.addChild(figure);
     }
-    
+    this.trace01.fillColor =_figureColor;
     //spawn
     this.trace01.position.x=centerX;
     this.trace01.position.y=centerY;
@@ -96,7 +96,16 @@ Forme.prototype.creationTrace = function(figure)
 
 Forme.prototype.update = function(mousePoint)
 {	
-	if(this.glisse && this.touchable)
+   
+   for(var i = 0; i<this.trace01.children.length; i++)
+        {
+           this.trace01.children[i].fillColor.saturation-=0.01;
+            if(this.trace01.children[i].fillColor.saturation<=0) this.trace01.children[i].fillColor.saturation=0;
+            //console.log(this.trace01.children[i].fillColor.red);
+        }
+    
+         
+    if(this.glisse && this.touchable)
     {
         this.trace01.position.x =(mousePoint.x);
         this.trace01.position.y =(mousePoint.y);
@@ -164,6 +173,13 @@ Forme.prototype.mouseDown = function(mousePoint)
         this.trace01.scale(grandeEchelle);
 
     }	
+}
+
+Forme.prototype.destroy = function()
+{
+    this.trace01.removeChildren();
+    this.trace01.remove();
+    this.touchable = false;
 }
 
 
