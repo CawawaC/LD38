@@ -11,6 +11,7 @@ window.onload = function ()
 	var mousePoint = view.center;
     var timerCompteARebours = setInterval(changeCompteARebours, 100);
     var compte =0;
+    var formeGlisse;
     function changeCompteARebours() { 
         compte++;
        textCompteARebours.content = (4-Math.floor(compte/10))+" : "+(9-compte%10); 
@@ -63,6 +64,7 @@ window.onload = function ()
             if( groupeDomestique[i].glisse)
             {
                  groupeDomestique[i].trace01.bringToFront();
+                formeGlisse = groupeDomestique[i];
                 break;
             }
         }
@@ -80,25 +82,31 @@ window.onload = function ()
         }
          */
          var hitResult ;
-         for (var i = 0; i<groupeDomestique.length; i++)
-        {
-            
-            
-            hitResult = groupeDomestique[i].trace01.intersects(formeSauvage.trace01);
-
-        if (hitResult)
-        {
-          
-            for(var j =0; j<3; j++)
+        // for (var i = 0; i<groupeDomestique.length; i++)
+       // {         
+             
+           // hitResult = groupeDomestique[i].trace01.intersects(formeSauvage.trace01);
+            hitResult = formeSauvage.trace01.hitTest(event.point, {
+	segments: true,
+	stroke: true,
+	fill: true,
+	tolerance: 5
+});
+            if (hitResult)
             {
-                if(groupeDomestique[i].paramForme[0][1] ==formeSauvage.paramForme[0][1])
-               {
-                     console.log('collide'); 
-               }
+                 console.log('collide'); 
+                for(var j =0; j<3; j++)
+                {
+                    if(formeGlisse.paramForme[0][1] ==formeSauvage.paramForme[0][1])
+                   {
+                         console.log('collide'); 
+                       //break;
+                   }
+                }
             }
-        }
-            groupeDomestique[i].mouseUp(event.point);
-        }
+            formeGlisse.mouseUp(event.point);
+         formeGlisse =null;
+       // }
 	}
 		
 	//paper JS event enter frame
@@ -113,7 +121,7 @@ window.onload = function ()
                groupeDomestique.splice(i-1, 1);
             }
         }*/
-         console.log(groupeDomestique.length);
+         
          for (var i = 0; i<groupeDomestique.length; i++)
         {
             groupeDomestique[i].update(mousePoint);

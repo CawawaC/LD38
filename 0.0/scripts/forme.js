@@ -99,7 +99,7 @@ Forme.prototype.update = function(mousePoint)
    
    for(var i = 0; i<this.trace01.children.length; i++)
         {
-           this.trace01.children[i].fillColor.saturation-=0.01;
+          // this.trace01.children[i].fillColor.saturation-=0.001;
             if(this.trace01.children[i].fillColor.saturation<=0) this.trace01.children[i].fillColor.saturation=0;
             //console.log(this.trace01.children[i].fillColor.red);
         }
