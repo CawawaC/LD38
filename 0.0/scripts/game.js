@@ -64,7 +64,7 @@ window.onload = function ()
             ]);
         }
         
-         for (var i = 0; i<10; i++)
+         for (var i = 0; i<groupeDomestique.length; i++)
         {
             groupeDomestique[i].mouseDown(event.point);
             
@@ -93,7 +93,7 @@ window.onload = function ()
         }
          */
          var hitResult ;
-         for (var i = 0; i<10; i++)
+         for (var i = 0; i<groupeDomestique.length; i++)
         {
             
             
@@ -118,17 +118,36 @@ window.onload = function ()
 	view.onFrame = function (event)
 	{
 		//formeDomestique.update(mousePoint);
-        
-         for (var i = 0; i<10; i++)
+       /* for (var i = 0; i<groupeDomestique.length; i++)
+        {
+           
+            if( groupeDomestique[i].trace01.children.length ==0)
+            {
+               groupeDomestique.splice(i-1, 1);
+            }
+        }*/
+         console.log(groupeDomestique.length);
+         for (var i = 0; i<groupeDomestique.length; i++)
         {
             groupeDomestique[i].update(mousePoint);
-            for(var j = 0 ; j < groupeDomestique.length ; j++) {
-                if(groupeDomestique[i].trace01.intersects(groupeDomestique[j].trace01)) {
+            for(var j = 0 ; j < groupeDomestique.length ; j++)
+            {
+                if(groupeDomestique[i].trace01.intersects(groupeDomestique[j].trace01))
+                {
                     groupeDomestique[i].rebondit();
                     groupeDomestique[j].rebondit();
                 }
             }
+             if( groupeDomestique[i].trace01.children.length>0)
+            {
+                if( groupeDomestique[i].trace01.children[0].fillColor.saturation == 0)
+                {
+                    groupeDomestique[i].destroy();
+                }
+            }
         }
+                
+        
 	}
     
     audioInit();
