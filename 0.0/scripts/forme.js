@@ -46,7 +46,7 @@ Forme.prototype.create= function()
          this.paramForme[i].push(_figureColor);
         this.trace01.addChild(figure);
     }
-    
+    this.trace01.fillColor =_figureColor;
     //spawn
     this.trace01.position.x=centerX;
     this.trace01.position.y=centerY;
@@ -96,7 +96,13 @@ Forme.prototype.creationTrace = function(figure)
 
 Forme.prototype.update = function(mousePoint)
 {	
-	if(this.glisse && this.touchable)
+   
+    for(var i = 0; i<this.trace01.children.length; i++)
+        {
+           // this.trace01.children[i].fillColor="#141241";
+            console.log(this.trace01.children[i].fillColor);
+        }
+    if(this.glisse && this.touchable)
     {
         this.trace01.position.x =(mousePoint.x);
         this.trace01.position.y =(mousePoint.y);
