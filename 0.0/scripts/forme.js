@@ -1,4 +1,3 @@
-var debugVieillesse = false;
 
 var centerX = 200;
 var centerY = 600;
@@ -32,13 +31,27 @@ Forme.prototype.create= function()
     this.formeAleatoire();
     
     //spawn
-    this.trace01.position.x=centerX;
-    this.trace01.position.y=centerY;
+    this.auCentre();
+//    this.trace01.position.x=centerX;
+//    this.trace01.position.y=centerY;
     
     this.vitesseAleatoire();
     
     this.touchable = true;
     this.glisse = true;
+}
+
+Forme.prototype.meurs = function() {
+    this.trace01.remove();
+}
+
+Forme.prototype.estSimilaireA = function(cousine) {
+    if(this.indexDeCouleur != cousine.indexDeCouleur) return false;
+    
+    for(var i = 0 ; i < 3 ; i++) {
+        if(cousine.paramForme[i][0] == this.paramForme[i][0]) return true;
+    }
+    return false;
 }
 
 Forme.prototype.creerFormeDomestique = function() {
@@ -114,6 +127,33 @@ Forme.prototype.creationTrace = function(figure)
 	return path;
 }
 
+Forme.prototype.auCentre = function() {
+    this.trace01.position.x=centerX;
+    this.trace01.position.y=centerY;
+}
+
+Forme.prototype.domesticationDeLaSauvage = function() {
+    var domestique = new Forme();
+    domestique.creerFormeDomestique();
+    domestique.paramForme = this.paramForme;
+    domestique.trace01.removeChildren();
+//    domestique.trace01 = this.trace01;
+    
+    for(var i = 0 ; i < 3 ; ++i) {
+        var figure;
+        figure = this.creationTrace(this.paramForme[i][0]);
+        figure.fillColor = this.paramForme[i][1];
+        figure.position.y = i*80;
+        domestique.trace01.addChild(figure);   
+    }
+    
+    domestique.domestication();
+    domestique.auCentre();
+//    domestique.trace01.position.x=centerX;
+//    domestique.trace01.position.y=centerY;
+    
+    return domestique;
+}
 
 Forme.prototype.update = function(mousePoint)
 {	

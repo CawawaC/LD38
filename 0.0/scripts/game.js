@@ -1,5 +1,6 @@
 var pause = false;
-var nombreDeFormesDomestiquesInitiales = 10;
+var nombreDeFormesDomestiquesInitiales = 5;
+var debugVieillesse = false;
 
 paper.install(window);
 window.onload = function ()
@@ -55,7 +56,7 @@ window.onload = function ()
     
     var groupeDomestique = [];
     
-    for (var i = 0; i< nombreDeFormesDomestiquesInitiales; i++)
+    for (var i = 0; i < nombreDeFormesDomestiquesInitiales; i++)
     {
         var formeDomestique = new Forme();
         formeDomestique.creerFormeDomestique();
@@ -101,7 +102,7 @@ window.onload = function ()
 	}
     
      tool.onMouseUp = function(event)
-	{
+     {
          
         /*var hitResult = formeDomestique.trace01.intersects(formeSauvage.trace01);
 
@@ -110,33 +111,39 @@ window.onload = function ()
            console.log('collide');
         }
          */
-         var hitResult ;
+        var hitResult ;
 
         // for (var i = 0; i<groupeDomestique.length; i++)
        // {         
              
            // hitResult = groupeDomestique[i].trace01.intersects(formeSauvage.trace01);
-            hitResult = formeSauvage.trace01.hitTest(event.point, {
-	segments: true,
-	stroke: true,
-	fill: true,
-	tolerance: 5
-});
-            if (hitResult)
+        hitResult = formeSauvage.trace01.hitTest(event.point, {
+            segments: true,
+            stroke: true,
+            fill: true,
+            tolerance: 5
+        });
+         
+         if (hitResult) {       
+            if(formeGlisse.estSimilaireA(formeSauvage))
             {
-                 console.log('collide'); 
-                for(var j =0; j<3; j++)
-                {
-                    if(formeGlisse.paramForme[0][1] ==formeSauvage.paramForme[0][1])
-                   {
-                         console.log('collide'); 
-                       //break;
-                   }
-                }
+                groupeDomestique.push(formeSauvage.domesticationDeLaSauvage());
+                formeGlisse.auCentre();
+                formeGlisse.mouseUp(event.point);
+            } else {
+                //kill formeglisse
+                var index = groupeDomestique.indexOf(formeGlisse);
+                groupeDomestique.splice(index, 1);
+                formeGlisse.meurs();
+                formeGlisse = null;
             }
+             
+            resetCompteARebours();
+            renouvelerFormeSauvage();
+         } else {
+            formeGlisse.auCentre();
             formeGlisse.mouseUp(event.point);
-         formeGlisse =null;
-       // }
+         }
 	}
 		
 	//paper JS event enter frame
@@ -152,7 +159,7 @@ window.onload = function ()
             }
         }*/
 
-         for (var i = 0; i<groupeDomestique.length; i++)
+         for (var i = 0; i < groupeDomestique.length; i++)
         {
             groupeDomestique[i].update(mousePoint);
             for(var j = 0 ; j < groupeDomestique.length ; j++)
