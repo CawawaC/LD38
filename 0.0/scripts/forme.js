@@ -122,6 +122,7 @@ Forme.prototype.update = function(mousePoint)
         {
             if(debugVieillesse)
            this.trace01.children[i].fillColor.saturation-=0.01;
+
             if(this.trace01.children[i].fillColor.saturation<=0) this.trace01.children[i].fillColor.saturation=0;
             //console.log(this.trace01.children[i].fillColor.red);
         }
