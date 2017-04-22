@@ -11,7 +11,7 @@ function Forme()
     this.vitesseY;
     this.touchable;
     this.glisse;
-    this.colors = ['red', 'blue', 'purple'];
+    this.colors = ['#140245', '#784537', '#478952'];
     this.figures = ['rond', 'carre', 'triangle'];
     this.paramForme = [];
 }
@@ -26,7 +26,7 @@ Forme.prototype.create= function()
     var _point;
     var _figureName;
     var _figureColor;
-    _figureColor =this.colors[Math.floor(Math.random()*4)];
+    _figureColor =this.colors[Math.floor(Math.random()*this.colors.length)];
     for( var i = 0; i <3; i++)
     {
 
@@ -97,11 +97,14 @@ Forme.prototype.creationTrace = function(figure)
 Forme.prototype.update = function(mousePoint)
 {	
    
-    for(var i = 0; i<this.trace01.children.length; i++)
+   for(var i = 0; i<this.trace01.children.length; i++)
         {
-           // this.trace01.children[i].fillColor="#141241";
-            console.log(this.trace01.children[i].fillColor);
+           this.trace01.children[i].fillColor.saturation-=0.01;
+            if(this.trace01.children[i].fillColor.saturation<=0) this.trace01.children[i].fillColor.saturation=0;
+            //console.log(this.trace01.children[i].fillColor.red);
         }
+    
+         
     if(this.glisse && this.touchable)
     {
         this.trace01.position.x =(mousePoint.x);
@@ -170,6 +173,13 @@ Forme.prototype.mouseDown = function(mousePoint)
         this.trace01.scale(grandeEchelle);
 
     }	
+}
+
+Forme.prototype.destroy = function()
+{
+    this.trace01.removeChildren();
+    this.trace01.remove();
+    this.touchable = false;
 }
 
 
