@@ -206,7 +206,7 @@ class Timbre {
 
         for(var i = 0 ; i < tailleDeTableau ; ++i){
             real[i] = Math.random() *2 - 1;
-            console.info(real[i]);
+//            console.info(real[i]);
             imag[i] = Math.random() *2 - 1;            
         }
         
@@ -264,7 +264,7 @@ var sequencerInterval;
 //                           //
 
 
-function init() {
+function audioInit() {
     context = new (window.AudioContext || window.webkitAudioContext)();
 
     masterGain = context.createGain();
@@ -396,7 +396,7 @@ function sonFM() {
     lop.frequency.value = 500;
     lop.gain.value = 25;
     
-    console.info(lop);
+//    console.info(lop);
     lop.connect(context.destination);
     fmOsc.envelope.disconnect();
     fmOsc.envelope.connect(lop);
