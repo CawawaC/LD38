@@ -159,7 +159,7 @@ class SonDeForme extends Oscillator {
     }
     
     jouerNote(figure, position, couleur) {
-        var noteRelative = NotesDeFigures[figure];
+        var noteRelative = notesDeFigures[figure];
         var octave = position+1;
         
         var noteAbsolue = noteRelative + octave*12;
@@ -246,17 +246,17 @@ class Timbre {
 //                      //
 
 
-var NotesDeFigures = [26, 30, 33, 35];
+var notesDeFigures = [26, 30, 33, 35];
 var timbres = [];
-
-var masterGain,
-    sineEnvelope,
-    context,
-    sine,
-    kick, snare, hihat, testOsc, fmOsc,
-    sequencerInterval;
-
 var sonsDeFormes = [];
+
+var masterGain;
+//    sineEnvelope,
+//    context,
+//    sine,
+//    kick, snare, hihat, testOsc, fmOsc,
+var sequencerInterval;
+
 
 
 //                           //
@@ -304,13 +304,12 @@ function creerSonsDeFormes() {
     }
 }
 
-
 //                                     //
 //      LES FONCTIONS DE LA VIE        //
 //                                     //
 
-function jouerUnSonDePattern(figure, position, couleur) {
-    sonsDeFormes[0].jouerNote(figure, position, couleur);
+function jouerUnSonDePattern(figure, position, couleur, oscillo = 0) {
+    sonsDeFormes[oscillo].jouerNote(figure, position, couleur);
 }
 
 /* supertableau :
@@ -443,8 +442,6 @@ function centsOffFromPitch(frequency, note) {
     return Math.floor( 1200 * Math.log( frequency / frequencyFromNoteNumber( note ))/Math.log(2) );
 }
 
-init();
-
 
 //                  //
 //      TESTS       //
@@ -460,5 +457,5 @@ function son3() {
     jouerUnSonDeForme([
         [0, 1, 0],
         [0, 1, 1],
-        [1, 1, 0]]);
+        [3, 1, 0]]);
 }
