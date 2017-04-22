@@ -264,7 +264,7 @@ var sonsDeFormes = [];
 //                           //
 
 
-function launch() {
+function init() {
     context = new (window.AudioContext || window.webkitAudioContext)();
 
     masterGain = context.createGain();
@@ -443,7 +443,7 @@ function centsOffFromPitch(frequency, note) {
     return Math.floor( 1200 * Math.log( frequency / frequencyFromNoteNumber( note ))/Math.log(2) );
 }
 
-launch();
+init();
 
 
 //                  //
