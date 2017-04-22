@@ -1,9 +1,13 @@
+var centerX = 200;
+var centerY = 600;
+var petiteEchelle = 0.2, grandeEchelle = 2;
+
 function Forme()
 { 
     //Prototype
     this.trace01;
     this.trace01Segments =[];
-    this.vitesseX;
+    this.vitesseX ;
     this.vitesseY;
     this.touchable;
     this.glisse;
@@ -25,6 +29,7 @@ Forme.prototype.create= function()
     _figureColor =this.colors[Math.floor(Math.random()*4)];
     for( var i = 0; i <3; i++)
     {
+
         _figureName =this.figures[Math.floor(Math.random()*this.figures.length)];
         
         figure = this.creationTrace(_figureName);
@@ -42,18 +47,20 @@ Forme.prototype.create= function()
         this.trace01.addChild(figure);
     }
     
-        
-    this.trace01.position.x=200;
-        this.trace01.position.y=200;
+    //spawn
+    this.trace01.position.x=centerX;
+    this.trace01.position.y=centerY;
+    
+    this.vitesseAleatoire();
     
     this.touchable = true;
     this.glisse = true;
 }
 
 Forme.prototype.domestication= function()
-{ 
-	
-	this.trace01.scale(.25);
+{ 	
+	this.trace01.scale(petiteEchelle);
+
 	
 }
 
@@ -106,13 +113,37 @@ Forme.prototype.update = function(mousePoint)
             }*/
      
  
+    } else if(!this.glisse && this.touchable) {
+        var newX = this.trace01.position.x + this.vitesseX;
+        var newY = this.trace01.position.y + this.vitesseY;
+        var distToCenter = Math.sqrt(Math.pow(newX-centerX, 2) + Math.pow(newY-centerY, 2));
+
+        if(distToCenter < 120) {
+            this.trace01.position.x = newX;
+            this.trace01.position.y = newY;
+        } else {
+            this.trace01.vitesseX * -1;
+            this.trace01.vitesseY * -1;
+        }
     }
+}
+
+Forme.prototype.vitesseAleatoire = function() {
+    this.vitesseX = (Math.random()*2-1)*0.6;
+    this.vitesseY = (Math.random()*2-1)*0.6;
+}
+
+Forme.prototype.rebondit = function() {
+    var tempX = this.vitesseX;
+    this.vitesseX = this.vitesseY;
+    this.vitesseY = tempX;
 }
 
 Forme.prototype.mouseUp = function(mousePoint)
 {	
     if(this.glisse)
-   { this.trace01.scale(.25);
+   { this.trace01.scale(1/(grandeEchelle));
+
     this.glisse=false;
    }
 }
@@ -130,7 +161,8 @@ Forme.prototype.mouseDown = function(mousePoint)
 	if (hitResult)
     {
         this.glisse = true;
-        this.trace01.scale(4);
+        this.trace01.scale(grandeEchelle);
+
     }	
 }
 
