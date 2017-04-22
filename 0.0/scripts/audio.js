@@ -10,7 +10,7 @@ class Oscillator {
         this.context = audioContext;
 
         this.osc = audioContext.createOscillator();
-        this.osc.type = "square";
+        this.osc.type = "sine";
         this.osc.frequency.value = frequencyFromNoteNumber(80);
         this.osc.start();
 
@@ -160,7 +160,8 @@ class SonDeForme extends Oscillator {
     
     jouerNote(figure, position, couleur) {
         var noteRelative = notesDeFigures[figure];
-        var octave = 3-position;  //Descendant
+//        var octave = 3-position;  //Descendant
+        var octave = 2; //octave fix
 //        var octave = position +1;   //Ascendant
         
         var noteAbsolue = noteRelative + octave*12;
@@ -168,7 +169,7 @@ class SonDeForme extends Oscillator {
         //this.osc.setPeriodicWave(timbreDeCouleur(couleur));
         
         Timbre.appliquerTimbreDeCouleur(couleur, this);
-        
+        console.info(this.osc.type);
 //        this.setNote(noteAbsolue);
         
         this.playNote(noteAbsolue);
@@ -234,9 +235,13 @@ class Timbre {
                 var onde = oscillateur.context.createPeriodicWave(real, imag);
                 oscillateur.osc.setPeriodicWave(onde);
                 break;
-            default:
-            oscillateur.osc.type = "triangle";
+            case 1:
+                oscillateur.osc.type = "sine";
                 break;
+            case 2:
+                oscillateur.osc.type = "triangle";
+                break;
+                
         }
     }
 }
@@ -318,6 +323,7 @@ function jouerUnSonDePattern(figure, position, couleur, oscillo = 0) {
  [figure, position, couleur],
  ...]*/
 function jouerUnSonDeForme(superTableau) {
+    //Harmonique
     /*for(var i = 0 ; i < superTableau.length ; ++i) {
         console.info(superTableau[i][0]);
         jouerUnSonDePattern(
@@ -326,6 +332,8 @@ function jouerUnSonDeForme(superTableau) {
             superTableau[i][2],
             i);
     }*/
+    
+    //Mélodique
     var i = 0;
     var troisCoups = setInterval(
         function(){ 
@@ -338,7 +346,7 @@ function jouerUnSonDeForme(superTableau) {
             ++i;
             if(i >= 3) clearInterval(troisCoups);
         },
-        100);    //set interval is in ms
+        500);    //set interval is in ms
 }
 
 

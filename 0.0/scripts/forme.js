@@ -26,7 +26,7 @@ Forme.prototype.create= function()
     var _point;
     var _figureName;
     var _figureColor;
-    this.indexDeCouleur = Math.floor(Math.random()*4);
+    this.indexDeCouleur = Math.floor(Math.random()*this.colors.length);
     _figureColor =this.colors[this.indexDeCouleur];
     
     this.indexDeForme = [];
