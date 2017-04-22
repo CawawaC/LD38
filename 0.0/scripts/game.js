@@ -11,13 +11,9 @@ window.onload = function ()
 	// variables et objets
 	var mousePoint = view.center;
     var timerCompteARebours = setInterval(changeCompteARebours, 100);
-<<<<<<< HEAD
     var compte = 4000;
-    
-=======
-    var compte =0;
     var formeGlisse;
->>>>>>> nat
+    
     function changeCompteARebours() { 
         if(!pause) {
             compte -= 100;
@@ -89,7 +85,6 @@ window.onload = function ()
             
             if( groupeDomestique[i].glisse)
             {
-<<<<<<< HEAD
                 groupeDomestique[i].trace01.bringToFront();
                 var f = groupeDomestique[i];
                 jouerUnSonDeForme([
@@ -97,10 +92,9 @@ window.onload = function ()
                     [f.indexDeForme[1], 1, f.indexDeCouleur],
                     [f.indexDeForme[0], 0, f.indexDeCouleur]
                 ]);
-=======
-                 groupeDomestique[i].trace01.bringToFront();
+
                 formeGlisse = groupeDomestique[i];
->>>>>>> nat
+                
                 break;
             } 
         }
@@ -117,31 +111,7 @@ window.onload = function ()
         }
          */
          var hitResult ;
-<<<<<<< HEAD
-         for (var i = 0; i<groupeDomestique.length; i++)
-        {
-            
-            
-            hitResult = groupeDomestique[i].trace01.intersects(formeSauvage.trace01);
 
-        if (hitResult)
-        {
-          var dropValide = true;
-            for(var j =0; j<3; j++)
-            {
-                if(groupeDomestique[i].paramForme[0][1] ==formeSauvage.paramForme[0][1])
-               {
-                     console.log('comparaison validée');
-               }
-            }
-            
-            if(dropValide) {
-                groupeDomestique.push(clone(formeSauvage));
-            }
-        }
-            groupeDomestique[i].mouseUp(event.point);
-        }
-=======
         // for (var i = 0; i<groupeDomestique.length; i++)
        // {         
              
@@ -167,7 +137,6 @@ window.onload = function ()
             formeGlisse.mouseUp(event.point);
          formeGlisse =null;
        // }
->>>>>>> nat
 	}
 		
 	//paper JS event enter frame
@@ -182,11 +151,7 @@ window.onload = function ()
                groupeDomestique.splice(i-1, 1);
             }
         }*/
-<<<<<<< HEAD
-//         console.log(groupeDomestique.length);
-=======
-         
->>>>>>> nat
+
          for (var i = 0; i<groupeDomestique.length; i++)
         {
             groupeDomestique[i].update(mousePoint);
