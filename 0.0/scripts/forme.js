@@ -7,8 +7,9 @@ function Forme()
     this.vitesseY;
     this.touchable;
     this.glisse;
-    this.colors = ['red', 'green', 'blue', 'purple'];
+    this.colors = ['red', 'blue', 'purple'];
     this.figures = ['rond', 'carre', 'triangle'];
+    this.paramForme = [];
 }
 
 Forme.prototype.create= function()
@@ -19,19 +20,25 @@ Forme.prototype.create= function()
     
     var figure;
     var _point;
-    for( var i = 0; i <4; i++)
+    var _figureName;
+    var _figureColor;
+    _figureColor =this.colors[Math.floor(Math.random()*4)];
+    for( var i = 0; i <3; i++)
     {
-        figure = this.creationTrace(this.figure[Math.floor(Math.random()*this.figure.length)]);
-        figure.fillColor = colors[Math.floor(Math.random()*4)];
-       figure.position.x = i*20;
-        // this.trace01Segments[i] = figure.segments;
+        _figureName =this.figures[Math.floor(Math.random()*this.figures.length)];
+        
+        figure = this.creationTrace(_figureName);
+        figure.fillColor = _figureColor;
+       figure.position.y = i*80;
         this.trace01Segments[i]=[];
       /* for(var j = 0; j<figure.segments.length; j++)
                  {
                      point = new Point(figure.segments[j].point);
                 this.trace01Segments[i][j]=_point ;
                  }*/
-       
+       this.paramForme[i]= [];
+        this.paramForme[i].push(_figureName);
+         this.paramForme[i].push(_figureColor);
         this.trace01.addChild(figure);
     }
     
@@ -46,7 +53,7 @@ Forme.prototype.create= function()
 Forme.prototype.domestication= function()
 { 
 	
-	this.trace01.scale(.5);
+	this.trace01.scale(.25);
 	
 }
 
@@ -54,7 +61,19 @@ Forme.prototype.creationTrace = function(figure)
 {
 	var path = new Path();
     var rayon = 50;
-    var points = 12;
+    var points ;
+    switch(figure)
+    {
+           case"rond":
+            points =12;
+            break;
+            case"carre":
+            points =4;
+            break;
+        case "triangle":
+            points=3;
+            break;
+    }
 	path.closed = true;
 	for (var i = 0; i < points; i++) {
 		var delta = new Point({
@@ -63,6 +82,7 @@ Forme.prototype.creationTrace = function(figure)
 		});
 		path.add(delta);
 	}
+    
 	return path;
 }
 
@@ -92,7 +112,7 @@ Forme.prototype.update = function(mousePoint)
 Forme.prototype.mouseUp = function(mousePoint)
 {	
     if(this.glisse)
-   { this.trace01.scale(.5);
+   { this.trace01.scale(.25);
     this.glisse=false;
    }
 }
@@ -110,7 +130,7 @@ Forme.prototype.mouseDown = function(mousePoint)
 	if (hitResult)
     {
         this.glisse = true;
-        this.trace01.scale(2);
+        this.trace01.scale(4);
     }	
 }
 
