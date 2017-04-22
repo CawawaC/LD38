@@ -166,10 +166,14 @@ Forme.prototype.mouseDown = function(mousePoint)
 	
 	if (hitResult)
     {
-        this.glisse = true;
-        this.trace01.scale(grandeEchelle);
-
-    }	
+        if(this.touchable) {
+            this.glisse = true;
+            this.trace01.scale(grandeEchelle);
+        } /*else  {    //C'est la forme sauvage
+            
+        }*/
+    }
+    return hitResult;
 }
 
 

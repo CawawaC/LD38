@@ -160,7 +160,8 @@ class SonDeForme extends Oscillator {
     
     jouerNote(figure, position, couleur) {
         var noteRelative = notesDeFigures[figure];
-        var octave = position+1;
+        var octave = 3-position;  //Descendant
+//        var octave = position +1;   //Ascendant
         
         var noteAbsolue = noteRelative + octave*12;
         
@@ -317,14 +318,27 @@ function jouerUnSonDePattern(figure, position, couleur, oscillo = 0) {
  [figure, position, couleur],
  ...]*/
 function jouerUnSonDeForme(superTableau) {
-    for(var i = 0 ; i < superTableau.length ; ++i) {
+    /*for(var i = 0 ; i < superTableau.length ; ++i) {
         console.info(superTableau[i][0]);
         jouerUnSonDePattern(
             superTableau[i][0],
             superTableau[i][1],
             superTableau[i][2],
             i);
-    }
+    }*/
+    var i = 0;
+    var troisCoups = setInterval(
+        function(){ 
+            jouerUnSonDePattern(
+            superTableau[i][0],
+            superTableau[i][1],
+            superTableau[i][2],
+            i);
+            
+            ++i;
+            if(i >= 3) clearInterval(troisCoups);
+        },
+        100);    //set interval is in ms
 }
 
 

@@ -55,28 +55,35 @@ window.onload = function ()
     
     tool.onMouseDown = function(event)
 	{
-		//formeDomestique.mouseDown(event.point);
+        if(formeSauvage.mouseDown(event.point)) {
+            var f = formeSauvage;
+            jouerUnSonDeForme([
+                [f.indexDeForme[2], 2, f.indexDeCouleur],
+                [f.indexDeForme[1], 1, f.indexDeCouleur],
+                [f.indexDeForme[0], 0, f.indexDeCouleur]
+            ]);
+        }
         
          for (var i = 0; i<10; i++)
         {
             groupeDomestique[i].mouseDown(event.point);
+            
             if( groupeDomestique[i].glisse)
             {
                 groupeDomestique[i].trace01.bringToFront();
                 var f = groupeDomestique[i];
                 jouerUnSonDeForme([
-                    [f.indexDeForme[0], 0, f.indexDeCouleur],
+                    [f.indexDeForme[2], 2, f.indexDeCouleur],
                     [f.indexDeForme[1], 1, f.indexDeCouleur],
-                    [f.indexDeForme[2], 2, f.indexDeCouleur]
+                    [f.indexDeForme[0], 0, f.indexDeCouleur]
                 ]);
                 break;
-            }
+            } 
         }
 	}
     
      tool.onMouseUp = function(event)
 	{
-		//formeDomestique.mouseUp(event.point);
          
         /*var hitResult = formeDomestique.trace01.intersects(formeSauvage.trace01);
 
