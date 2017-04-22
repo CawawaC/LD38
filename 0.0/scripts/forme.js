@@ -1,3 +1,4 @@
+
 var centerX = 200;
 var centerY = 600;
 var petiteEchelle = 0.2, grandeEchelle = 2;
@@ -26,30 +27,13 @@ Forme.prototype.create= function()
     var _point;
     var _figureName;
     var _figureColor;
-    _figureColor =this.colors[Math.floor(Math.random()*this.colors.length)];
-    for( var i = 0; i <3; i++)
-    {
-
-        _figureName =this.figures[Math.floor(Math.random()*this.figures.length)];
-        
-        figure = this.creationTrace(_figureName);
-        figure.fillColor = _figureColor;
-       figure.position.y = i*80;
-        this.trace01Segments[i]=[];
-      /* for(var j = 0; j<figure.segments.length; j++)
-                 {
-                     point = new Point(figure.segments[j].point);
-                this.trace01Segments[i][j]=_point ;
-                 }*/
-       this.paramForme[i]= [];
-        this.paramForme[i].push(_figureName);
-         this.paramForme[i].push(_figureColor);
-        this.trace01.addChild(figure);
-    }
-    this.trace01.fillColor =_figureColor;
+    
+    this.formeAleatoire();
+    
     //spawn
-    this.trace01.position.x=centerX;
-    this.trace01.position.y=centerY;
+    this.auCentre();
+//    this.trace01.position.x=centerX;
+//    this.trace01.position.y=centerY;
     
     this.vitesseAleatoire();
     
@@ -57,11 +41,61 @@ Forme.prototype.create= function()
     this.glisse = true;
 }
 
+Forme.prototype.meurs = function() {
+    this.trace01.remove();
+}
+
+Forme.prototype.estSimilaireA = function(cousine) {
+    if(this.indexDeCouleur != cousine.indexDeCouleur) return false;
+    
+    for(var i = 0 ; i < 3 ; i++) {
+        if(cousine.paramForme[i][0] == this.paramForme[i][0]) return true;
+    }
+    return false;
+}
+
+Forme.prototype.creerFormeDomestique = function() {
+    this.create();
+    this.touchable=true;
+    this.glisse = false;
+    this.domestication();
+}
+
+Forme.prototype.formeAleatoire = function() {
+    this.indexDeCouleur = Math.floor(Math.random()*this.colors.length);
+    _figureColor =this.colors[this.indexDeCouleur];
+    
+    this.indexDeForme = [];
+    this.paramForme = [];
+    this.trace01.removeChildren();
+    
+    for( var i = 0; i <3; i++)
+    {
+        var index = Math.floor(Math.random()*this.figures.length);
+        
+        this.indexDeForme.push(index);
+        _figureName = this.figures[index];
+        
+        figure = this.creationTrace(_figureName);
+        figure.fillColor = _figureColor;
+        figure.position.y = i*80;
+        this.trace01Segments[i]=[];
+      /* for(var j = 0; j<figure.segments.length; j++)
+                 {
+                     point = new Point(figure.segments[j].point);
+                this.trace01Segments[i][j]=_point ;
+                 }*/
+        this.paramForme[i]= [];
+        this.paramForme[i].push(_figureName);
+        this.paramForme[i].push(_figureColor);
+        this.trace01.addChild(figure);
+    }
+    this.trace01.fillColor =_figureColor;
+}
+
 Forme.prototype.domestication= function()
 { 	
 	this.trace01.scale(petiteEchelle);
-
-	
 }
 
 Forme.prototype.creationTrace = function(figure)
@@ -93,13 +127,42 @@ Forme.prototype.creationTrace = function(figure)
 	return path;
 }
 
+Forme.prototype.auCentre = function() {
+    this.trace01.position.x=centerX;
+    this.trace01.position.y=centerY;
+}
+
+Forme.prototype.domesticationDeLaSauvage = function() {
+    var domestique = new Forme();
+    domestique.creerFormeDomestique();
+    domestique.paramForme = this.paramForme;
+    domestique.trace01.removeChildren();
+//    domestique.trace01 = this.trace01;
+    
+    for(var i = 0 ; i < 3 ; ++i) {
+        var figure;
+        figure = this.creationTrace(this.paramForme[i][0]);
+        figure.fillColor = this.paramForme[i][1];
+        figure.position.y = i*80;
+        domestique.trace01.addChild(figure);   
+    }
+    
+    domestique.domestication();
+    domestique.auCentre();
+//    domestique.trace01.position.x=centerX;
+//    domestique.trace01.position.y=centerY;
+    
+    return domestique;
+}
 
 Forme.prototype.update = function(mousePoint)
 {	
-   
+   if(!pause)
    for(var i = 0; i<this.trace01.children.length; i++)
         {
-          // this.trace01.children[i].fillColor.saturation-=0.001;
+            if(debugVieillesse)
+           this.trace01.children[i].fillColor.saturation-=0.01;
+
             if(this.trace01.children[i].fillColor.saturation<=0) this.trace01.children[i].fillColor.saturation=0;
             //console.log(this.trace01.children[i].fillColor.red);
         }
@@ -123,16 +186,18 @@ Forme.prototype.update = function(mousePoint)
      
  
     } else if(!this.glisse && this.touchable) {
-        var newX = this.trace01.position.x + this.vitesseX;
-        var newY = this.trace01.position.y + this.vitesseY;
-        var distToCenter = Math.sqrt(Math.pow(newX-centerX, 2) + Math.pow(newY-centerY, 2));
+        if(!pause) {
+            var newX = this.trace01.position.x + this.vitesseX;
+            var newY = this.trace01.position.y + this.vitesseY;
+            var distToCenter = Math.sqrt(Math.pow(newX-centerX, 2) + Math.pow(newY-centerY, 2));
 
-        if(distToCenter < 120) {
-            this.trace01.position.x = newX;
-            this.trace01.position.y = newY;
-        } else {
-            this.trace01.vitesseX * -1;
-            this.trace01.vitesseY * -1;
+            if(distToCenter < 120) {
+                this.trace01.position.x = newX;
+                this.trace01.position.y = newY;
+            } else {
+                this.trace01.vitesseX * -1;
+                this.trace01.vitesseY * -1;
+            }
         }
     }
 }
@@ -169,10 +234,14 @@ Forme.prototype.mouseDown = function(mousePoint)
 	
 	if (hitResult)
     {
-        this.glisse = true;
-        this.trace01.scale(grandeEchelle);
-
-    }	
+        if(this.touchable) {
+            this.glisse = true;
+            this.trace01.scale(grandeEchelle);
+        } /*else  {    //C'est la forme sauvage
+            
+        }*/
+    }
+    return hitResult;
 }
 
 Forme.prototype.destroy = function()

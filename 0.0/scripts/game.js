@@ -1,4 +1,6 @@
-
+var pause = false;
+var nombreDeFormesDomestiquesInitiales = 5;
+var debugVieillesse = false;
 
 paper.install(window);
 window.onload = function ()
@@ -10,21 +12,38 @@ window.onload = function ()
 	// variables et objets
 	var mousePoint = view.center;
     var timerCompteARebours = setInterval(changeCompteARebours, 100);
-    var compte =0;
+    var compte = 4000;
     var formeGlisse;
+    
     function changeCompteARebours() { 
-        compte++;
-       textCompteARebours.content = (4-Math.floor(compte/10))+" : "+(9-compte%10); 
-        if(compte>=40)
-        {
-            clearInterval(timerCompteARebours);
-            timerCompteARebours = setInterval(changeCompteARebours, 100);
-            compte =0;
+        if(!pause) {
+            compte -= 100;
+//            textCompteARebours.content = (5-Math.floor(compte/10))+" : "+(9-compte%10); 
+            textCompteARebours.content = Math.floor(compte/1000) + ":" + Math.floor(compte%1000)/100;
+            if(compte == 0)
+            {
+                renouvelerFormeSauvage();
+                resetCompteARebours();
+            }
         }
     }
     
+    function renouvelerFormeSauvage() {
+        formeSauvage.formeAleatoire();
+        formeSauvage.trace01.position.x =300;
+        formeSauvage.trace01.position.y =300;
+    }
+    
+    function resetCompteARebours() {
+        clearInterval(timerCompteARebours);
+        timerCompteARebours = setInterval(changeCompteARebours, 100);
+        compte = 4000;
+    }
+    
     var textCompteARebours = new paper.PointText(new paper.Point(100,100));
-    textCompteARebours.fillColor = 'purple';
+//    console.info(compte);
+//    console.info(textCompteARebours.hasFill());
+    textCompteARebours.fillColor = 'white';
     textCompteARebours.content = '0';
 
     
@@ -35,16 +54,12 @@ window.onload = function ()
     formeSauvage.trace01.position.x =300;
     formeSauvage.trace01.position.y =300;
     
-    var groupeDomestique =[];
+    var groupeDomestique = [];
     
-    for (var i = 0; i<10; i++)
+    for (var i = 0; i < nombreDeFormesDomestiquesInitiales; i++)
     {
-        var formeDomestique = Forme();
-        formeDomestique = new Forme();
-        formeDomestique.create();
-        formeDomestique.touchable=true;
-        formeDomestique.glisse = false;
-        formeDomestique.domestication();
+        var formeDomestique = new Forme();
+        formeDomestique.creerFormeDomestique();
         groupeDomestique.push(formeDomestique);
     }
     
@@ -56,23 +71,38 @@ window.onload = function ()
     
     tool.onMouseDown = function(event)
 	{
-		//formeDomestique.mouseDown(event.point);
+        if(formeSauvage.mouseDown(event.point)) {
+            var f = formeSauvage;
+            jouerUnSonDeForme([
+                [f.indexDeForme[2], 2, f.indexDeCouleur],
+                [f.indexDeForme[1], 1, f.indexDeCouleur],
+                [f.indexDeForme[0], 0, f.indexDeCouleur]
+            ]);
+        }
         
          for (var i = 0; i<groupeDomestique.length; i++)
         {
             groupeDomestique[i].mouseDown(event.point);
+            
             if( groupeDomestique[i].glisse)
             {
-                 groupeDomestique[i].trace01.bringToFront();
+                groupeDomestique[i].trace01.bringToFront();
+                var f = groupeDomestique[i];
+                jouerUnSonDeForme([
+                    [f.indexDeForme[2], 2, f.indexDeCouleur],
+                    [f.indexDeForme[1], 1, f.indexDeCouleur],
+                    [f.indexDeForme[0], 0, f.indexDeCouleur]
+                ]);
+
                 formeGlisse = groupeDomestique[i];
+                
                 break;
-            }
+            } 
         }
 	}
     
      tool.onMouseUp = function(event)
-	{
-		//formeDomestique.mouseUp(event.point);
+     {
          
         /*var hitResult = formeDomestique.trace01.intersects(formeSauvage.trace01);
 
@@ -81,32 +111,39 @@ window.onload = function ()
            console.log('collide');
         }
          */
-         var hitResult ;
+        var hitResult ;
+
         // for (var i = 0; i<groupeDomestique.length; i++)
        // {         
              
            // hitResult = groupeDomestique[i].trace01.intersects(formeSauvage.trace01);
-            hitResult = formeSauvage.trace01.hitTest(event.point, {
-	segments: true,
-	stroke: true,
-	fill: true,
-	tolerance: 5
-});
-            if (hitResult)
+        hitResult = formeSauvage.trace01.hitTest(event.point, {
+            segments: true,
+            stroke: true,
+            fill: true,
+            tolerance: 5
+        });
+         
+         if (hitResult) {       
+            if(formeGlisse.estSimilaireA(formeSauvage))
             {
-                 console.log('collide'); 
-                for(var j =0; j<3; j++)
-                {
-                    if(formeGlisse.paramForme[0][1] ==formeSauvage.paramForme[0][1])
-                   {
-                         console.log('collide'); 
-                       //break;
-                   }
-                }
+                groupeDomestique.push(formeSauvage.domesticationDeLaSauvage());
+                formeGlisse.auCentre();
+                formeGlisse.mouseUp(event.point);
+            } else {
+                //kill formeglisse
+                var index = groupeDomestique.indexOf(formeGlisse);
+                groupeDomestique.splice(index, 1);
+                formeGlisse.meurs();
+                formeGlisse = null;
             }
+             
+            resetCompteARebours();
+            renouvelerFormeSauvage();
+         } else {
+            formeGlisse.auCentre();
             formeGlisse.mouseUp(event.point);
-         formeGlisse =null;
-       // }
+         }
 	}
 		
 	//paper JS event enter frame
@@ -121,8 +158,8 @@ window.onload = function ()
                groupeDomestique.splice(i-1, 1);
             }
         }*/
-         
-         for (var i = 0; i<groupeDomestique.length; i++)
+
+         for (var i = 0; i < groupeDomestique.length; i++)
         {
             groupeDomestique[i].update(mousePoint);
             for(var j = 0 ; j < groupeDomestique.length ; j++)
@@ -146,4 +183,13 @@ window.onload = function ()
 	}
     
     audioInit();
+}
+
+function clone(obj) {
+    if (null == obj || "object" != typeof obj) return obj;
+    var copy = obj.constructor();
+    for (var attr in obj) {
+        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+    }
+    return copy;
 }

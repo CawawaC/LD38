@@ -10,7 +10,7 @@ class Oscillator {
         this.context = audioContext;
 
         this.osc = audioContext.createOscillator();
-        this.osc.type = "square";
+        this.osc.type = "sine";
         this.osc.frequency.value = frequencyFromNoteNumber(80);
         this.osc.start();
 
@@ -160,14 +160,16 @@ class SonDeForme extends Oscillator {
     
     jouerNote(figure, position, couleur) {
         var noteRelative = notesDeFigures[figure];
-        var octave = position+1;
+//        var octave = 3-position;  //Descendant
+        var octave = 2; //octave fix
+//        var octave = position +1;   //Ascendant
         
         var noteAbsolue = noteRelative + octave*12;
         
         //this.osc.setPeriodicWave(timbreDeCouleur(couleur));
         
         Timbre.appliquerTimbreDeCouleur(couleur, this);
-        
+        console.info(this.osc.type);
 //        this.setNote(noteAbsolue);
         
         this.playNote(noteAbsolue);
@@ -199,7 +201,6 @@ class Timbre {
     }
     
     aleatoire() {
-        console.info("timbre aléatoire");
         var tailleDeTableau = 10;
         var real = new Float32Array(tailleDeTableau);
         var imag = new Float32Array(tailleDeTableau);
@@ -233,9 +234,13 @@ class Timbre {
                 var onde = oscillateur.context.createPeriodicWave(real, imag);
                 oscillateur.osc.setPeriodicWave(onde);
                 break;
-            default:
-            oscillateur.osc.type = "triangle";
+            case 1:
+                oscillateur.osc.type = "sine";
                 break;
+            case 2:
+                oscillateur.osc.type = "triangle";
+                break;
+                
         }
     }
 }
@@ -317,13 +322,30 @@ function jouerUnSonDePattern(figure, position, couleur, oscillo = 0) {
  [figure, position, couleur],
  ...]*/
 function jouerUnSonDeForme(superTableau) {
-    for(var i = 0 ; i < superTableau.length ; ++i) {
+    //Harmonique
+    /*for(var i = 0 ; i < superTableau.length ; ++i) {
+        console.info(superTableau[i][0]);
         jouerUnSonDePattern(
             superTableau[i][0],
             superTableau[i][1],
             superTableau[i][2],
             i);
-    }
+    }*/
+    
+    //Mélodique
+    var i = 0;
+    var troisCoups = setInterval(
+        function(){ 
+            jouerUnSonDePattern(
+            superTableau[i][0],
+            superTableau[i][1],
+            superTableau[i][2],
+            i);
+            
+            ++i;
+            if(i >= 3) clearInterval(troisCoups);
+        },
+        500);    //set interval is in ms
 }
 
 
