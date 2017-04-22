@@ -72,15 +72,31 @@ textCompteARebours.content = '0';
 	{
 		//formeDomestique.mouseUp(event.point);
          
-        var hitResult = formeDomestique.trace01.intersects(formeSauvage.trace01);
+        /*var hitResult = formeDomestique.trace01.intersects(formeSauvage.trace01);
 
         if (hitResult)
         {
            console.log('collide'); 
         }
-         
+         */
+         var hitResult ;
          for (var i = 0; i<10; i++)
         {
+            
+            
+            hitResult = groupeDomestique[i].trace01.intersects(formeSauvage.trace01);
+
+        if (hitResult)
+        {
+          
+            for(var j =0; j<3; j++)
+            {
+                if(groupeDomestique[i].paramForme[0][1] ==formeSauvage.paramForme[0][1])
+               {
+                     console.log('collide'); 
+               }
+            }
+        }
             groupeDomestique[i].mouseUp(event.point);
         }
 	}
