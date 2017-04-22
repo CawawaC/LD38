@@ -22,9 +22,9 @@ window.onload = function ()
         }
     }
     
-var textCompteARebours = new paper.PointText(new paper.Point(100,100));
-textCompteARebours.fillColor = 'purple';
-textCompteARebours.content = '0';
+    var textCompteARebours = new paper.PointText(new paper.Point(100,100));
+    textCompteARebours.fillColor = 'purple';
+    textCompteARebours.content = '0';
 
     
     var formeSauvage = Forme();
@@ -76,7 +76,7 @@ textCompteARebours.content = '0';
 
         if (hitResult)
         {
-           console.log('collide'); 
+           console.log('collide');
         }
          
          for (var i = 0; i<10; i++)
@@ -93,6 +93,14 @@ textCompteARebours.content = '0';
          for (var i = 0; i<10; i++)
         {
             groupeDomestique[i].update(mousePoint);
+            for(var j = 0 ; j < groupeDomestique.length ; j++) {
+                if(groupeDomestique[i].trace01.intersects(groupeDomestique[j].trace01)) {
+                    groupeDomestique[i].rebondit();
+                    groupeDomestique[j].rebondit();
+                }
+            }
         }
 	}
+    
+    audioInit();
 }
