@@ -201,7 +201,6 @@ class Timbre {
     }
     
     aleatoire() {
-        console.info("timbre aléatoire");
         var tailleDeTableau = 10;
         var real = new Float32Array(tailleDeTableau);
         var imag = new Float32Array(tailleDeTableau);
