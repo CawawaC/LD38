@@ -1,3 +1,5 @@
+var debugVieillesse = false;
+
 var centerX = 200;
 var centerY = 600;
 var petiteEchelle = 0.2, grandeEchelle = 2;
@@ -26,33 +28,9 @@ Forme.prototype.create= function()
     var _point;
     var _figureName;
     var _figureColor;
-    this.indexDeCouleur = Math.floor(Math.random()*this.colors.length);
-    _figureColor =this.colors[this.indexDeCouleur];
     
-    this.indexDeForme = [];
+    this.formeAleatoire();
     
-    for( var i = 0; i <3; i++)
-    {
-        var index = Math.floor(Math.random()*this.figures.length);
-        
-        this.indexDeForme.push(index);
-        _figureName = this.figures[index];
-        
-        figure = this.creationTrace(_figureName);
-        figure.fillColor = _figureColor;
-       figure.position.y = i*80;
-        this.trace01Segments[i]=[];
-      /* for(var j = 0; j<figure.segments.length; j++)
-                 {
-                     point = new Point(figure.segments[j].point);
-                this.trace01Segments[i][j]=_point ;
-                 }*/
-       this.paramForme[i]= [];
-        this.paramForme[i].push(_figureName);
-         this.paramForme[i].push(_figureColor);
-        this.trace01.addChild(figure);
-    }
-    this.trace01.fillColor =_figureColor;
     //spawn
     this.trace01.position.x=centerX;
     this.trace01.position.y=centerY;
@@ -63,11 +41,48 @@ Forme.prototype.create= function()
     this.glisse = true;
 }
 
+Forme.prototype.creerFormeDomestique = function() {
+    this.create();
+    this.touchable=true;
+    this.glisse = false;
+    this.domestication();
+}
+
+Forme.prototype.formeAleatoire = function() {
+    this.indexDeCouleur = Math.floor(Math.random()*this.colors.length);
+    _figureColor =this.colors[this.indexDeCouleur];
+    
+    this.indexDeForme = [];
+    this.paramForme = [];
+    this.trace01.removeChildren();
+    
+    for( var i = 0; i <3; i++)
+    {
+        var index = Math.floor(Math.random()*this.figures.length);
+        
+        this.indexDeForme.push(index);
+        _figureName = this.figures[index];
+        
+        figure = this.creationTrace(_figureName);
+        figure.fillColor = _figureColor;
+        figure.position.y = i*80;
+        this.trace01Segments[i]=[];
+      /* for(var j = 0; j<figure.segments.length; j++)
+                 {
+                     point = new Point(figure.segments[j].point);
+                this.trace01Segments[i][j]=_point ;
+                 }*/
+        this.paramForme[i]= [];
+        this.paramForme[i].push(_figureName);
+        this.paramForme[i].push(_figureColor);
+        this.trace01.addChild(figure);
+    }
+    this.trace01.fillColor =_figureColor;
+}
+
 Forme.prototype.domestication= function()
 { 	
 	this.trace01.scale(petiteEchelle);
-
-	
 }
 
 Forme.prototype.creationTrace = function(figure)
@@ -102,9 +117,10 @@ Forme.prototype.creationTrace = function(figure)
 
 Forme.prototype.update = function(mousePoint)
 {	
-   
+   if(!pause)
    for(var i = 0; i<this.trace01.children.length; i++)
         {
+            if(debugVieillesse)
            this.trace01.children[i].fillColor.saturation-=0.01;
             if(this.trace01.children[i].fillColor.saturation<=0) this.trace01.children[i].fillColor.saturation=0;
             //console.log(this.trace01.children[i].fillColor.red);
@@ -129,16 +145,18 @@ Forme.prototype.update = function(mousePoint)
      
  
     } else if(!this.glisse && this.touchable) {
-        var newX = this.trace01.position.x + this.vitesseX;
-        var newY = this.trace01.position.y + this.vitesseY;
-        var distToCenter = Math.sqrt(Math.pow(newX-centerX, 2) + Math.pow(newY-centerY, 2));
+        if(!pause) {
+            var newX = this.trace01.position.x + this.vitesseX;
+            var newY = this.trace01.position.y + this.vitesseY;
+            var distToCenter = Math.sqrt(Math.pow(newX-centerX, 2) + Math.pow(newY-centerY, 2));
 
-        if(distToCenter < 120) {
-            this.trace01.position.x = newX;
-            this.trace01.position.y = newY;
-        } else {
-            this.trace01.vitesseX * -1;
-            this.trace01.vitesseY * -1;
+            if(distToCenter < 120) {
+                this.trace01.position.x = newX;
+                this.trace01.position.y = newY;
+            } else {
+                this.trace01.vitesseX * -1;
+                this.trace01.vitesseY * -1;
+            }
         }
     }
 }
