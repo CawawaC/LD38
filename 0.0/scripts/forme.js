@@ -12,7 +12,7 @@ function Forme()
     this.glisse;
     this.colors = ['#140245', '#784537', '#478952'];
     this.figures = ['rond', 'carre', 'triangle'];
-    this.paramForme = [];
+    this.formesComposantes = [];
     this.vieillissement;    //Interval
 }
 
@@ -46,9 +46,11 @@ Forme.prototype.meurs = function() {
 
 Forme.prototype.estSimilaireA = function(cousine) {
     if(this.indexDeCouleur != cousine.indexDeCouleur) return false;
-    
+    console.log("on est là");
     for(var i = 0 ; i < 3 ; i++) {
-        if(cousine.paramForme[i][0] == this.paramForme[i][0]) return true;
+        console.log("cousine : " + this.figures[cousine.formesComposantes[i]] + 
+                    ", this : " + this.figures[this.formesComposantes[i]]);
+        if(cousine.formesComposantes[i] == this.formesComposantes[i]) return true;
     }
     return false;
 }
@@ -71,7 +73,7 @@ Forme.prototype.formeAleatoire = function() {
     _figureColor =this.colors[this.indexDeCouleur];
     
     this.indexDeForme = [];
-    this.paramForme = [];
+    this.formesComposantes = [];
     this.trace01 = new Path();
     
     var figuresTemp = [];
@@ -94,9 +96,7 @@ Forme.prototype.formeAleatoire = function() {
                      point = new Point(figure.segments[j].point);
                 this.trace01Segments[i][j]=_point ;
                  }*/
-        this.paramForme[i]= [];
-        this.paramForme[i].push(_figureName);
-        this.paramForme[i].push(_figureColor);
+        this.formesComposantes[i] = index;
         
 //        figuresTemp.push(figure);
         
@@ -182,15 +182,15 @@ Forme.prototype.domesticationDeLaSauvage = function() {
     var domestique = new Forme();
     domestique.indexDeCouleur = this.indexDeCouleur;
     domestique.creerFormeDomestique();
-    domestique.paramForme = this.paramForme;
+    domestique.formesComposantes = this.formesComposantes;
     domestique.trace01.remove();
     domestique.trace01 = this.trace01;
 //    domestique.trace01 = this.trace01;
     
 //    for(var i = 0 ; i < 3 ; ++i) {
 //        var figure;
-//        figure = this.creationTrace(this.paramForme[i][0]);
-//        figure.fillColor = this.paramForme[i][1];
+//        figure = this.creationTrace(this.formesComposantes[i][0]);
+//        figure.fillColor = this.formesComposantes[i][1];
 //        figure.position.y = i*80;
 //        domestique.trace01.addChild(figure);   
 //    }

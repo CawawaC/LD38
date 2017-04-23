@@ -72,10 +72,6 @@ window.onload = function ()
             this.trace.addChild(figure2)
         }
         
-        traceDeTriangle() {
-            
-        }
-        
         traceDeLosange() {
             for (var i = 0; i < points; i++) {
                 var delta = new Point({
@@ -211,9 +207,9 @@ window.onload = function ()
         
          for (var i = groupeDomestique.length-1; i>=0; i--)
         {
-//            groupeDomestique[i].mouseDown(event.point);
-            if(groupeDomestique[i].mouseDown(event.point))
-            console.info("fs");
+            groupeDomestique[i].mouseDown(event.point);
+//            if(groupeDomestique[i].mouseDown(event.point))
+//                console.info("fs");
             
             if( groupeDomestique[i].glisse)
             {
@@ -281,7 +277,6 @@ window.onload = function ()
 	//paper JS event enter frame
 	view.onFrame = function (event)
 	{
-        console.log(groupeDomestique.length);
 		//formeDomestique.update(mousePoint);
        /* for (var i = 0; i<groupeDomestique.length; i++)
         {

@@ -165,7 +165,6 @@ class SonDeForme extends Oscillator {
 //        var octave = position +1;   //Ascendant
         
         var noteAbsolue = noteRelative + octave*7 + 12;
-        console.log(figure + "-->" + noteAbsolue);
         //this.osc.setPeriodicWave(timbreDeCouleur(couleur));
         
         Timbre.appliquerTimbreDeCouleur(couleur, this);
