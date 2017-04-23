@@ -124,22 +124,25 @@ window.onload = function ()
             tolerance: 5
         });
          
-         if (hitResult) {       
-            if(formeGlisse.estSimilaireA(formeSauvage))
-            {
-                groupeDomestique.push(formeSauvage.domesticationDeLaSauvage());
-                formeGlisse.auCentre();
-                formeGlisse.mouseUp(event.point);
-            } else {
-                //kill formeglisse
-                var index = groupeDomestique.indexOf(formeGlisse);
-                groupeDomestique.splice(index, 1);
-                formeGlisse.meurs();
+         if (hitResult) {   
+             if(formeGlisse != null) {
+                if(formeGlisse.estSimilaireA(formeSauvage))
+                {
+                    groupeDomestique.push(formeSauvage.domesticationDeLaSauvage());
+                    formeGlisse.auCentre();
+                    formeGlisse.mouseUp(event.point);
+                } else {
+                    //kill formeglisse
+                    var index = groupeDomestique.indexOf(formeGlisse);
+                    groupeDomestique.splice(index, 1);
+                    formeGlisse.meurs();
+                }
+
                 formeGlisse = null;
-            }
-             
-            resetCompteARebours();
-            renouvelerFormeSauvage();
+
+                resetCompteARebours();
+                renouvelerFormeSauvage();
+             }
          } else {
             formeGlisse.auCentre();
             formeGlisse.mouseUp(event.point);

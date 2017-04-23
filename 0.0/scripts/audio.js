@@ -33,7 +33,7 @@ class Oscillator {
     }
 
     playNote(note) {
-        console.info("je joue une note : " + note);
+//        console.info("je joue une note : " + note);
         this.setNote(note);
         this.linearAmplitudeBurst(context.currentTime, this.envelopeAD[0], this.envelopeAD[1], this.envelopeAD[2], this.envelopeAD[3]);
     }
@@ -169,7 +169,7 @@ class SonDeForme extends Oscillator {
         //this.osc.setPeriodicWave(timbreDeCouleur(couleur));
         
         Timbre.appliquerTimbreDeCouleur(couleur, this);
-        console.info(this.osc.type);
+//        console.info(this.osc.type);
 //        this.setNote(noteAbsolue);
         
         this.playNote(noteAbsolue);
