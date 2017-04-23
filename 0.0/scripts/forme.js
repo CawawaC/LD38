@@ -320,15 +320,16 @@ Forme.prototype.creationTraceTete = function(figure)
     switch(figure)
     {
             case"rond":            
-			path=this.creationPath(50,12,0,0);
-			path = path.subtract(this.creationPath(30,3,0,-6,270));
-			path = path.unite(this.creationPath(15,3,0,-3,270));
-			
-            break;
+			path=this.creationPath(45,12,0,0);
+			path = path.unite(this.creationPath(25,12,0,-40));
+			path = path.subtract(this.creationPath(25,3,0,-6,270));
+			path = path.unite(this.creationPath(10,3,0,-3,270));
+            break;	
             case"carre":
-            path=this.creationPath(50,4,0,0);
-			 path = path.subtract(this.creationPath(22,12,0,0));
-			path = path.unite(this.creationPath(12,12,0,0));
+            path=this.creationPath(48,4,0,0);
+			path = path.unite(this.creationPath(25,3,0,-40,270));
+			 path = path.subtract(this.creationPath(20,12,0,0));
+			path = path.unite(this.creationPath(10,12,0,0));
             break;
         case "triangle":
           path=this.creationPath(55,3,0,0,270);
@@ -350,17 +351,20 @@ Forme.prototype.creationTraceCorps = function(figure)
     {
         case"rond":            
 			path=this.creationPath(50,12,0,0);
-			path = path.unite(this.creationPath(20,4,-90,0));
-			path = path.unite(this.creationPath(20,4,90,0));
+			path = path.unite(this.creationPath(15,4,-70,0));
+			path = path.unite(this.creationPath(15,4,70,0));	
+			path = path.subtract(this.creationPath(17,12,0,0));
             break;
         case"carre":
-            path=this.creationPath(50,4,0,0);
-			path = path.unite(this.creationPath(22,3,-52,20,270));
-			path = path.unite(this.creationPath(22,3,52,20,270));
+            path=this.creationPath(55,4,0,0);	
+			path = path.unite(this.creationPath(15,3,-50,20,15));
+			path = path.unite(this.creationPath(15,3,50,20,45));
+			path = path.subtract(this.creationPath(7,4,0,0));
             break;
         case "triangle":
-          path=this.creationPath(55,3,0,0,270);
-		  path = path.unite(this.creationPath(20,12,0,-22));
+          path=this.creationPath(60,3,0,0,270);
+		  path = path.unite(this.creationPath(20,12,0,-27));
+		  path = path.subtract(this.creationPath(12,3,0,8,270));
             break;
     }    
 	return path;
@@ -374,18 +378,19 @@ Forme.prototype.creationTracePieds = function(figure)
     switch(figure)
     {
             case"rond":            
-			path=this.creationPath(50,12);
-			path = path.unite(this.creationPath(25,3,-40,20,270));
-			path = path.unite(this.creationPath(25,3,40,20,270));
+			path=this.creationPath(35,12);
+			path = path.unite(this.creationPath(15,12,0,55));
             break;
             case"carre":
             path=this.creationPath(50,4,0,0);
+			path = path.subtract(this.creationPath(15,4,0,0));
 			path = path.unite(this.creationPath(25,4,0,45));
+			
             break;
         case "triangle":
-			path=this.creationPath(55,3,0,0,270);
-			path =  path.unite(this.creationPath(10,12,-46,40));
-			path = path.unite(this.creationPath(10,12,46,40));
+			path=this.creationPath(50,3,0,0,270);
+			path =  path.unite(this.creationPath(20,3,0,45,270));
+			path = path.unite(this.creationPath(10,3,0,70,270));
             break;
     }   
 	path.position.y=80;		
