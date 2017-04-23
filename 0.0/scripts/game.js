@@ -322,7 +322,7 @@ window.onload = function ()
              if(groupeDomestique[i].trace01 != null)
             {
                 if(groupeDomestique[i].trace01.fillColor != null)
-                if(groupeDomestique[i].trace01.fillColor.saturation == 0)
+                if(groupeDomestique[i].trace01.fillColor.alpha == 0)
                 {
                     groupeDomestique[i].destroy();
 //                    groupeDOmestique[i]
