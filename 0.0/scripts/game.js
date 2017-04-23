@@ -1,6 +1,6 @@
 var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false;
 var nombreDeFormesDomestiquesInitiales = 5;
-var vieillesse = true, vieillissementRapide = 0;
+var vieillesse = true, vieillissementRapide = 1;
 var prairie;
 //var traceDePrairie;
 var date;
@@ -255,7 +255,7 @@ window.onload = function ()
         hitResult = formeSauvage.trace01.hitTest(event.point, {
             segments: true,
             stroke: true,
-            fill: true,
+            fill: false,
             tolerance: 5
         });
 
