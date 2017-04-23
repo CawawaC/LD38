@@ -227,7 +227,7 @@ Forme.prototype.domesticationDeLaSauvage = function() {
         domestique.vieillissement = setInterval(
             desaturation, 
             100, 
-            domestique.trace01.fillColor, 
+            domestique.trace01.children[1].fillColor, 
             domestique.incrementDeVieillessement);
     
 //    domestique.trace01 = this.trace01;
