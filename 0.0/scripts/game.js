@@ -1,6 +1,6 @@
 var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false;
 var nombreDeFormesDomestiquesInitiales = 5;
-var vieillesse = true, vieillissementRapide = 0;
+var vieillesse = true, vieillissementRapide = 1;
 var prairie;
 //var traceDePrairie;
 var date;
@@ -63,9 +63,9 @@ window.onload = function ()
             bg = new Path.Rectangle(new Point(0, 0), new Point(largeur, hauteur));
             
             var offsetx = 0;
-            figure1 = new Path.Rectangle(new Point(0, 0), new Point(10, hauteur));
-            figure2 = new Path.Rectangle(new Point(0, 0), new Point(10, hauteur));
-            figure2.position.x = 32;
+            figure1 = new Path.Rectangle(new Point(0, 0), new Point(5, hauteur));
+            figure2 = new Path.Rectangle(new Point(0, 0), new Point(5, hauteur));
+            figure2.position.x = 15;
 
             bg.fillColor = "white"; 
             bg.fillColor.alpha = 0.01;
@@ -115,7 +115,7 @@ window.onload = function ()
         }
     }
     
-    boutonDePause = new Bouton(300, 100, 30, 50);
+    boutonDePause = new Bouton(320, 30, 20, 20);
     menu = new Bouton(50, 50, 300, 500);
     menu.trace.visible = false;
     menu.traceDeRectangle(200, 400, 300, 500);
