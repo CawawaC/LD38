@@ -1,6 +1,6 @@
 var /*pause = false, */pauseTime = false, pauseMovement = false;
 var nombreDeFormesDomestiquesInitiales = 5;
-var vieillesse = true, vieillissementRapide = 0;
+var vieillesse = true, vieillissementRapide = 10;
 var prairie;
 var traceDePrairie;
 var date;
@@ -127,13 +127,8 @@ window.onload = function ()
     traceDePrairie = tracerLaPrairie();
     
     function renouvelerFormeSauvage() {
-//        formeSauvage.destroy();
         formeSauvage.formeAleatoire();
-<<<<<<< HEAD
         formeSauvage.trace01.position.x =300;
-=======
-        formeSauvage.trace01.position.x =largeurCanvas/2;
->>>>>>> Sachasamuse
         formeSauvage.trace01.position.y =300;
         
         TweenVersGauche();
@@ -199,7 +194,6 @@ window.onload = function ()
         }
         
         else if(formeSauvage.mouseDown(event.point)) {
-            
             var f = formeSauvage;
             jouerUnSonDeForme([
                 [f.indexDeForme[2], 2, f.indexDeCouleur],
@@ -210,9 +204,7 @@ window.onload = function ()
         
          for (var i = groupeDomestique.length-1; i>=0; i--)
         {
-//            groupeDomestique[i].mouseDown(event.point);
-            if(groupeDomestique[i].mouseDown(event.point))
-            console.info("fs");
+            groupeDomestique[i].mouseDown(event.point);
             
             if( groupeDomestique[i].glisse)
             {
@@ -249,32 +241,22 @@ window.onload = function ()
              if(formeGlisse != null) {
                 if(formeGlisse.estSimilaireA(formeSauvage))
                 {
-                    console.log("bon drop");
                     groupeDomestique.push(formeSauvage.domesticationDeLaSauvage());
                     if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
                     formeGlisse.mouseUp(event.point);
-//                    formeSauvage.destroy();
                 } else {
-                    console.log("mauvais drop");
                     //kill formeglisse
                     var index = groupeDomestique.indexOf(formeGlisse);
-                    groupeDomestique[index].destroy();
                     groupeDomestique.splice(index, 1);
                     formeGlisse.meurs();
-                    formeSauvage.destroy();
 //                    groupeDomestique[index].destroy();
                 }
-//              formeGlisse.destroy();
 
-<<<<<<< HEAD
                 formeGlisse = null; 
 //<<<<<<< HEAD
 //                resetCompteARebours();
 //                renouvelerFormeSauvage();
 //=======
-=======
-//                formeGlisse.destroy();
->>>>>>> Sachasamuse
                /* resetCompteARebours();
                 renouvelerFormeSauvage();*/
                  TweenVersCentreRetardee();
@@ -284,12 +266,12 @@ window.onload = function ()
             if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
             formeGlisse.mouseUp(event.point);
          }
+         formeGlisse = null;
 	}
 		
 	//paper JS event enter frame
 	view.onFrame = function (event)
 	{
-        console.log(groupeDomestique.length);
 		//formeDomestique.update(mousePoint);
        /* for (var i = 0; i<groupeDomestique.length; i++)
         {
@@ -311,7 +293,7 @@ window.onload = function ()
 //                    groupeDomestique[j].rebondit();
 //                }
 //            }
-             if(groupeDomestique[i].trace01 != null)
+             if(groupeDomestique[i].trace01.children.length>0)
             {
                 if(groupeDomestique[i].trace01.fillColor != null)
                 if(groupeDomestique[i].trace01.fillColor.saturation == 0)
@@ -345,14 +327,6 @@ window.onload = function ()
     }
     function TweenVersGauche()
     {
-<<<<<<< HEAD
-=======
-        renouvelerFormeSauvage();
-        formeSauvage.trace01.position.x =  -100 ;
-        if(!paused)
-        pauseTime = false;
-        resetCompteARebours();
->>>>>>> Sachasamuse
         createjs.Tween.get( formeSauvage.trace01.position)
           .to( { x: 100, y: 300 }, 1000, createjs.Ease.quadOut )  
           .call( function() {
@@ -366,7 +340,7 @@ window.onload = function ()
      function TweenVersCentreRetardee()
     {
         
-        renouvelerFormeSauvage();
+            renouvelerFormeSauvage();
         formeSauvage.trace01.position.x =  -100 ;
         if(!paused)
         pauseTime = false;

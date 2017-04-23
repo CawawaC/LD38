@@ -398,7 +398,7 @@ function ondulerLaPrairie() {
     for(var i = 0 ; i < traceDePrairie.segments.length ; ++i) {
         var centre = new Point(prairie.x, prairie.y);
         var pointRelatif = centre - traceDePrairie.segments[i].point;
-//        console.info(pointRelatif);
+        console.info(pointRelatif);
 //        console.info(traceDePrairie.segments[i].point.x);
 //        traceDePrairie.segments[i].point.length = traceDePrairie.segments[i].point.length +1;
     }
