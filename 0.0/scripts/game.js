@@ -74,7 +74,8 @@ window.onload = function ()
 
             this.trace.addChild(bg);
             this.trace.addChild(figure1);
-            this.trace.addChild(figure2)
+            this.trace.addChild(figure2);
+//            this.trace.addChild(dessinerPlay());
         }
         
         traceDeLosange() {
@@ -214,7 +215,7 @@ texteTutoriel.justification = 'center';
     
     tool.onMouseDown = function(event)
 	{
-        mouseDownTemps = date.getTime();
+//        mouseDownTemps = date.getTime();
         
         if(boutonDePause.mouseDown(event.point)) {
            if(paused)
@@ -233,34 +234,32 @@ texteTutoriel.justification = 'center';
                 [f.indexDeForme[1], 1, f.indexDeCouleur],
                 [f.indexDeForme[0], 0, f.indexDeCouleur]
             ]);
-        }
-        
-         for (var i = groupeDomestique.length-1; i>=0; i--)
-        {
-            groupeDomestique[i].mouseDown(event.point);
-//            if(groupeDomestique[i].mouseDown(event.point))
-//                console.info("fs");
-            
-            if( groupeDomestique[i].glisse)
-            {
-                groupeDomestique[i].trace01.bringToFront();
-                var f = groupeDomestique[i];
-                jouerUnSonDeForme([
-                    [f.indexDeForme[2], 2, f.indexDeCouleur],
-                    [f.indexDeForme[1], 1, f.indexDeCouleur],
-                    [f.indexDeForme[0], 0, f.indexDeCouleur]
-                ]);
+        } else {
+             for (var i = groupeDomestique.length-1; i>=0; i--) {
+                if(groupeDomestique[i].mouseDown(event.point))
+                    groupeDomestique[i].incrementDeVieillessement.valeur *= -1;
 
-                formeGlisse = groupeDomestique[i];
-                
-                break;
-            } 
+                if( groupeDomestique[i].glisse)
+                {
+                    groupeDomestique[i].trace01.bringToFront();
+                    var f = groupeDomestique[i];
+                    jouerUnSonDeForme([
+                        [f.indexDeForme[2], 2, f.indexDeCouleur],
+                        [f.indexDeForme[1], 1, f.indexDeCouleur],
+                        [f.indexDeForme[0], 0, f.indexDeCouleur]
+                    ]);
+
+                    formeGlisse = groupeDomestique[i];
+
+                    break;
+                } 
+            }
         }
 	}
     
      tool.onMouseUp = function(event)
      {
-         deltaTemps = mouseDownTemps - date.getTime();
+//         deltaTemps = mouseDownTemps - date.getTime();
          
 
         var hitResult;
@@ -277,6 +276,7 @@ texteTutoriel.justification = 'center';
                  var scoreLocal = formeGlisse.estSimilaireA(formeSauvage);
                 if(scoreLocal > 0)
                 {
+                    feedbackAudioPositif();
                     console.log("bon drop");
                     groupeDomestique.push(formeSauvage.domesticationDeLaSauvage());
                     if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
@@ -288,13 +288,18 @@ texteTutoriel.justification = 'center';
                     texteScore.content = score;
                     console.log(score);
                 } else {
+                    feedbackAudioNegatif();
+
                     console.log("mauvais drop");
                     //kill formeglisse
                     var index = groupeDomestique.indexOf(formeGlisse);
-                    groupeDomestique[index].destroy();
-                    groupeDomestique.splice(index, 1);
+                    if(index >= 0) {
+                        groupeDomestique[index].destroy();
+                        groupeDomestique.splice(index, 1);
+                    }
                     formeGlisse.meurs();
                     formeSauvage.destroy();
+                    
 //                    groupeDomestique[index].destroy();
                 }
 //              formeGlisse.destroy();
@@ -393,6 +398,9 @@ texteTutoriel.justification = 'center';
     
     createjs.Ticker.setFPS( 60 );
    // createjs.Ticker.addEventListener( 'tick', update );
+    
+    toggleMenu();
+    commencerPause();
 }
 
 function clone(obj) {
@@ -408,7 +416,9 @@ function commencerPause() {
     pauseTime = true;
     pauseMovement = true;
     paused = true;
-    createjs.Ticker.paused = true; 
+    createjs.Ticker.paused = true;     
+    
+//    boutonDePause.trace.addChild(dessinerPlay());
 }
 
 function finirPause() {
@@ -451,4 +461,15 @@ function tracerLaPrairie() {
     path.position.y = prairie.y;
     
     return path;
+}
+
+function dessinerPlay() {
+    var triangle = new Path.RegularPolygon({
+        center: [0, 0],
+        sides: 3,
+        radius: 40,
+        fillColor: 'white'
+    });
+    triangle.rotate(90);
+    return triangle;
 }
