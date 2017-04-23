@@ -256,10 +256,14 @@ window.onload = function ()
 
                /* resetCompteARebours();
                 renouvelerFormeSauvage();*/
+<<<<<<< HEAD
 
                  TweenVersCentreRetardee();
 
 
+=======
+                 TweenVersCentre();
+>>>>>>> parent of 9678a5f... tween03
              }
          } else if(formeGlisse != null) {
             if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
@@ -324,12 +328,25 @@ window.onload = function ()
        /*  createjs.Tween.get( formeSauvage.trace01.fillColor)
       .to( { alpha: 1 }, 500, createjs.Ease.quadOut ) ;*/
     }
+<<<<<<< HEAD
     function TweenVersGauche()
     {
         createjs.Tween.get( formeSauvage.trace01.position)
 
           .to( {  x:  largeurCanvas/2 }, 500, createjs.Ease.quadOut ) ;
 
+=======
+    
+     function TweenVersCentre()
+    {
+        formeSauvage.trace01.position.x =  -100 ;
+            renouvelerFormeSauvage();
+        if(!paused)
+        pauseTime = false;
+                resetCompteARebours();
+        createjs.Tween.get( formeSauvage.trace01.position)
+          .to( {  x:  largeurCanvas/2 }, 500, createjs.Ease.quadOut ) ;
+>>>>>>> parent of 9678a5f... tween03
     }
     
     audioInit();
