@@ -253,8 +253,14 @@ window.onload = function ()
                 }
 
                 formeGlisse = null; 
-                resetCompteARebours();
-                renouvelerFormeSauvage();
+//<<<<<<< HEAD
+//                resetCompteARebours();
+//                renouvelerFormeSauvage();
+//=======
+               /* resetCompteARebours();
+                renouvelerFormeSauvage();*/
+                 TweenVersCentreRetardee();
+//>>>>>>> nat
              }
          } else if(formeGlisse != null) {
             if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
@@ -329,6 +335,19 @@ window.onload = function ()
         
        /* createjs.Tween.get( formeSauvage.trace01.fillColor)
             .to( { alpha: 0 }, 500, createjs.Ease.quadOut )  */ 
+    }
+    
+     function TweenVersCentreRetardee()
+    {
+        
+            renouvelerFormeSauvage();
+        formeSauvage.trace01.position.x =  -100 ;
+        if(!paused)
+        pauseTime = false;
+                resetCompteARebours();
+        createjs.Tween.get( formeSauvage.trace01.position)
+        .wait (500)
+          .to( {  x:  largeurCanvas/2 }, 500, createjs.Ease.quadOut ) ;
     }
     
     audioInit();
