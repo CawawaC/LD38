@@ -124,10 +124,7 @@ window.onload = function ()
 //    texteTutoriel = new paper.PointText();
     texteTutoriel.fillColor = 'red';
     texteTutoriel.visible = false;
-    texteTutoriel.characterStyle = {
-        fontSize: 11,
-        font: 'Lobster Two'
-    };
+
 //    console.log(texteTutoriel.bounds);
 //    texteTutoriel.bounds = new paper. Rectangle(80, 180, 100, 200);
 //    console.log(texteTutoriel.bounds);
@@ -341,6 +338,7 @@ window.onload = function ()
             texteTutoriel.visible = true;
             texteTutoriel.content = 'Game over :(';
             texteTutoriel.bringToFront();
+            commencerPause();
         }
 	}
     
