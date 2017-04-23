@@ -111,10 +111,10 @@ Forme.prototype.formeAleatoire = function(couleur = -1) {
                 figure =this.creationTraceTete(_figureName);
                 break;
                   case 1:
-                figure =this.creationTraceTete(_figureName);
+                figure =this.creationTraceCorps(_figureName);
                 break;
                   case 2:
-                figure =this.creationTraceTete(_figureName);
+                figure =this.creationTracePieds(_figureName);
                 break;
         }
 //        figure.fillColor = _figureColor;
@@ -353,8 +353,6 @@ Forme.prototype.mouseDown = function(mousePoint)
     }
     return hitResult;
 }
-
-
 Forme.prototype.creationTraceTete = function(figure)
 {
 	var path = new Path();
@@ -439,7 +437,6 @@ Forme.prototype.creationTracePieds = function(figure)
 	path.position.y=80;		
 	return path;
 }
-
 Forme.prototype.creationPath = function(rayon,sommets,x=0,y=0,angle=0)
 {
 	var path = new Path();
@@ -456,7 +453,6 @@ Forme.prototype.creationPath = function(rayon,sommets,x=0,y=0,angle=0)
 	path.position.y=y;
 	return path;
 }
-
 Forme.prototype.TweenVersCentre = function()
 {
     createjs.Tween.get( this.trace01.position)
