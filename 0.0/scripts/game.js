@@ -74,6 +74,8 @@ window.onload = function ()
         formeSauvage.formeAleatoire();
         formeSauvage.trace01.position.x =300;
         formeSauvage.trace01.position.y =300;
+        
+        TweenVersGauche();
     }
     
     function changeCompteARebours() { 
@@ -85,6 +87,7 @@ window.onload = function ()
             {
                 renouvelerFormeSauvage();
                 resetCompteARebours();
+                  TweenVersDroite();
             }
         }
     }
@@ -115,6 +118,7 @@ window.onload = function ()
     {
         var formeDomestique = new Forme();
         formeDomestique.creerFormeDomestique();
+        formeDomestique.placerDansLaPrairie();
         groupeDomestique.push(formeDomestique);
     }
     
@@ -139,7 +143,7 @@ window.onload = function ()
             ]);
         }
         
-         for (var i = 0; i<groupeDomestique.length; i++)
+         for (var i = groupeDomestique.length-1; i>=0; i--)
         {
             groupeDomestique[i].mouseDown(event.point);
             
@@ -223,14 +227,14 @@ window.onload = function ()
          for (var i = 0; i < groupeDomestique.length; i++)
         {
             groupeDomestique[i].update(mousePoint);
-            for(var j = 0 ; j < groupeDomestique.length ; j++)
-            {
-                if(groupeDomestique[i].trace01.intersects(groupeDomestique[j].trace01))
-                {
-                    groupeDomestique[i].rebondit();
-                    groupeDomestique[j].rebondit();
-                }
-            }
+//            for(var j = 0 ; j < groupeDomestique.length ; j++)
+//            {
+//                if(groupeDomestique[i].trace01.intersects(groupeDomestique[j].trace01))
+//                {
+//                    groupeDomestique[i].rebondit();
+//                    groupeDomestique[j].rebondit();
+//                }
+//            }
              if( groupeDomestique[i].trace01.children.length>0)
             {
                 if( groupeDomestique[i].trace01.children[0].fillColor.saturation == 0)
@@ -243,7 +247,32 @@ window.onload = function ()
         
 	}
     
+   function TweenVersDroite()
+    {
+        createjs.Tween.get( formeSauvage.trace01.position)
+      .to( { x: 100 }, 500, createjs.Ease.quadOut )  
+      .call( function() {
+        console.log( 'done!' );
+      } );
+       /*  createjs.Tween.get( formeSauvage.trace01.fillColor)
+      .to( { alpha: 1 }, 500, createjs.Ease.quadOut ) ;*/
+    }
+    function TweenVersGauche()
+    {
+        createjs.Tween.get( formeSauvage.trace01.position)
+          .to( { x: 100, y: 300 }, 1000, createjs.Ease.quadOut )  
+          .call( function() {
+            console.log( 'done!' );
+            } );
+        
+       /* createjs.Tween.get( formeSauvage.trace01.fillColor)
+            .to( { alpha: 0 }, 500, createjs.Ease.quadOut )  */ 
+    }
+    
     audioInit();
+    
+    createjs.Ticker.setFPS( 60 );
+   // createjs.Ticker.addEventListener( 'tick', update );
 }
 
 function clone(obj) {
