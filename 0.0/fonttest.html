@@ -1,0 +1,23 @@
+<head>
+   <link href='http://fonts.googleapis.com/css?family=Lobster+Two&v1' rel='stylesheet' type='text/css'>
+   <script type="text/javascript" src="libs/paper-full.js"></script>
+   <script type="text/paperscript" canvas="canvas">
+      var text = new PointText(new Point(50, 50));
+      text.content = 'Hello world.';
+      text.characterStyle = {
+         fontSize: 50,
+         font: 'Lobster Two',
+         fillColor: 'black',
+      };
+   </script> 
+   <style type="text/css">
+      div{
+         font-family: 'Lobster Two';
+      }
+   </style>
+</head>
+
+<body>
+   <div>&nbsp;</div>
+   <canvas id="canvas" resize keepalive="true"></canvas> 
+</body>
