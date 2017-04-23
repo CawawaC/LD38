@@ -276,6 +276,7 @@ texteTutoriel.justification = 'center';
                  var scoreLocal = formeGlisse.estSimilaireA(formeSauvage);
                 if(scoreLocal > 0)
                 {
+                    feedbackAudioPositif();
                     console.log("bon drop");
                     groupeDomestique.push(formeSauvage.domesticationDeLaSauvage());
                     if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
@@ -287,13 +288,18 @@ texteTutoriel.justification = 'center';
                     texteScore.content = score;
                     console.log(score);
                 } else {
+                    feedbackAudioNegatif();
+
                     console.log("mauvais drop");
                     //kill formeglisse
                     var index = groupeDomestique.indexOf(formeGlisse);
-                    groupeDomestique[index].destroy();
-                    groupeDomestique.splice(index, 1);
+                    if(index >= 0) {
+                        groupeDomestique[index].destroy();
+                        groupeDomestique.splice(index, 1);
+                    }
                     formeGlisse.meurs();
                     formeSauvage.destroy();
+                    
 //                    groupeDomestique[index].destroy();
                 }
 //              formeGlisse.destroy();
