@@ -185,10 +185,15 @@ Forme.prototype.domesticationDeLaSauvage = function() {
     }
     
     domestique.domestication();
+<<<<<<< HEAD
 
     domestique.trace01.position.x = largeurCanvas/2;
     domestique.trace01.position.y =300;
 
+=======
+    domestique.trace01.x = largeurCanvas/2;
+    domestique.y =300;
+>>>>>>> parent of 9678a5f... tween03
     domestique.ramenerDansLaPrairie();
 //    domestique.trace01.position.x=centerX;
 //    domestique.trace01.position.y=centerY;
