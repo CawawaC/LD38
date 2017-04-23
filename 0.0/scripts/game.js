@@ -5,6 +5,8 @@ var prairie;
 var traceDePrairie;
 var date;
 
+var score;
+
 var textCompteARebours;
 var compte = 4000;
 var formeGlisse;
@@ -15,12 +17,15 @@ var menu;
 var largeurCanvas;
 var hauteurCanvas;
 
-var texteTutoriel;
+var texteTutoriel, texteScore;
+
+var dropAutorise = true;
 
 paper.install(window);
 window.onload = function ()
 {
     date = new Date();
+    score = 0;
     
     largeurCanvas = document.getElementById("gameCanvas").width;
     hauteurCanvas = document.getElementById("gameCanvas").height;
@@ -119,6 +124,10 @@ window.onload = function ()
     texteTutoriel.fillColor = 'red';
     texteTutoriel.visible = false;
     texteTutoriel.content  = "Gloubi blouga";
+    
+    texteScore = new paper.PointText(new paper.Point(80, 180));
+    texteScore.fillColor = 'red';
+    texteScore.content  = "Score: 0";
     
     traceDePrairie = tracerLaPrairie();
     
@@ -242,15 +251,19 @@ window.onload = function ()
             tolerance: 5
         });
 
-         if (hitResult) {   
+         if (hitResult && dropAutorise) {   
              if(formeGlisse != null) {
-                if(formeGlisse.estSimilaireA(formeSauvage))
+                 var scoreLocal = formeGlisse.estSimilaireA(formeSauvage);
+                if(scoreLocal > 0)
                 {
                     console.log("bon drop");
                     groupeDomestique.push(formeSauvage.domesticationDeLaSauvage());
                     if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
                     formeGlisse.mouseUp(event.point);
-//                    formeSauvage.destroy();
+                    
+                    score += scoreLocal;
+                    texteScore.content = "Score: "+score;
+                    console.log(score);
                 } else {
                     console.log("mauvais drop");
                     //kill formeglisse
@@ -322,29 +335,32 @@ window.onload = function ()
     
     function TweenVersGauche()
     {
+        dropAutorise = false;
         createjs.Tween.get( formeSauvage.trace01.position)
           .to( {  x:largeurCanvas+100}, 500, createjs.Ease.quadOut )  
          
          .call( function() {
        
             TweenVersCentre();
+            dropInterdit = true;
       } )  ;
     }
     
      function TweenVersCentre()
     {
+        dropAutorise = false;
         renouvelerFormeSauvage();
         formeSauvage.trace01.position.x =  -100 ;
         if(!paused)
         pauseTime = false;
         resetCompteARebours();
         createjs.Tween.get( formeSauvage.trace01.position)
-          .to( {  x:  largeurCanvas/2 }, 500, createjs.Ease.quadOut ) ;
+          .to( {  x:  largeurCanvas/2 }, 500, createjs.Ease.quadOut ).call( function() {dropAutorise = true;}) ;
     }
     
      function TweenVersCentreRetardee()
     {
-        
+        dropAutorise = false;
         renouvelerFormeSauvage();
         formeSauvage.trace01.position.x =  -100 ;
         if(!paused)
@@ -352,7 +368,7 @@ window.onload = function ()
                 resetCompteARebours();
         createjs.Tween.get( formeSauvage.trace01.position)
         .wait (500)
-          .to( {  x:  largeurCanvas/2 }, 500, createjs.Ease.quadOut ) ;
+          .to( {  x:  largeurCanvas/2 }, 500, createjs.Ease.quadOut ).call(function(){dropAutorise=true;}) ;
     }
     
     audioInit();

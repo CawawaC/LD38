@@ -45,14 +45,17 @@ Forme.prototype.meurs = function() {
 }
 
 Forme.prototype.estSimilaireA = function(cousine) {
-    if(this.indexDeCouleur != cousine.indexDeCouleur) return false;
+    if(this.indexDeCouleur != cousine.indexDeCouleur) return 0;
     console.log("on est là");
+    scoreLocal = 0;
     for(var i = 0 ; i < 3 ; i++) {
+        
         console.log("cousine : " + this.figures[cousine.formesComposantes[i]] + 
                     ", this : " + this.figures[this.formesComposantes[i]]);
-        if(cousine.formesComposantes[i] == this.formesComposantes[i]) return true;
+        if(cousine.formesComposantes[i] == this.formesComposantes[i]) scoreLocal++;
     }
-    return false;
+    if(scoreLocal == 3) scoreLocal = 5;
+    return scoreLocal;
 }
 
 Forme.prototype.creerFormeDomestique = function() {
@@ -61,9 +64,10 @@ Forme.prototype.creerFormeDomestique = function() {
     this.glisse = false;
     this.domestication();
     
-    this.incrementDeVieillessement = Math.random()/100;
+    this.incrementDeVieillessement = Math.random()/100+0.001;
     console.info(this.incrementDeVieillessement);
     
+    console.log("programmation du vieillissement");
     if(vieillesse)
         this.vieillissement = setInterval(desaturation, 100, this.trace01.fillColor, this.incrementDeVieillessement);
 }
@@ -180,9 +184,12 @@ Forme.prototype.estDansLaPrairie = function() {
 
 Forme.prototype.domesticationDeLaSauvage = function() {
     var domestique = new Forme();
-    domestique.indexDeCouleur = this.indexDeCouleur;
     domestique.creerFormeDomestique();
+    
+    //Copier caractéristiques
     domestique.formesComposantes = this.formesComposantes;
+    domestique.indexDeCouleur = this.indexDeCouleur;
+    
     domestique.trace01.remove();
     domestique.trace01 = this.trace01;
 //    domestique.trace01 = this.trace01;
