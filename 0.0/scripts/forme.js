@@ -63,7 +63,7 @@ Forme.prototype.creerFormeDomestique = function() {
     console.info(this.incrementDeVieillessement);
     
     if(vieillesse)
-        this.vieillissement = setInterval(desaturation, 100, this.trace01/*.children[i]*/.fillColor, this.incrementDeVieillessement);
+        this.vieillissement = setInterval(desaturation, 100, this.trace01.fillColor, this.incrementDeVieillessement);
 }
 
 Forme.prototype.formeAleatoire = function() {
@@ -74,16 +74,19 @@ Forme.prototype.formeAleatoire = function() {
     this.paramForme = [];
     this.trace01.removeChildren();
     
-    var figures = [];
+    var figuresTemp = [];
+//    var figureUnifiee;
     
     for( var i = 0; i <3; i++)
     {
+        var figure = new Path();
+        
         var index = Math.floor(Math.random()*this.figures.length);
         this.indexDeForme.push(index);
         _figureName = this.figures[index];
         
         figure = this.creationTrace(_figureName);
-        figure.fillColor = _figureColor;
+//        figure.fillColor = _figureColor;
         figure.position.y = i*80;
         this.trace01Segments[i]=[];
       /* for(var j = 0; j<figure.segments.length; j++)
@@ -95,18 +98,21 @@ Forme.prototype.formeAleatoire = function() {
         this.paramForme[i].push(_figureName);
         this.paramForme[i].push(_figureColor);
         
-        figures.push(figure);
-//        figureUnifiee.unite(figure);
+//        figuresTemp.push(figure);
         
-//        this.trace01.addChild(figure);
+//        figureUnifiee.unite(figure);
+        this.trace01.addChild(figure);
     }
-    var figureUnifiee;
-    figureUnifiee = figures[0].unite(figures[1]);
-    figureUnifiee = figureUnifiee.unite(figures[2]);
+//    var figureUnifiee;
+//    figureUnifiee = figuresTemp[0].unite(figuresTemp[1]);
+//    figureUnifiee = figureUnifiee.unite(figuresTemp[2]);
+//        
+//    figuresTemp[0].remove();
+//    figuresTemp[1].remove();
+//    figuresTemp[2].remove();
     
-    this.trace01.addChild(figureUnifiee);
+//    this.trace01.addChild(figureUnifiee);
 
-    this.trace01.fillColor = new Color(0.5, 0, 0.5,.5);
     this.trace01.fillColor =_figureColor;
    // this.trace01.fillColor.alpha =.5;
 }
@@ -196,6 +202,7 @@ Forme.prototype.domesticationDeLaSauvage = function() {
 }
 
 function desaturation(couleur, incrementDeVieillessement) {
+    console.log(couleur);
     couleur.saturation-=incrementDeVieillessement*vieillissementRapide;
     if(couleur.saturation < 0)
         couleur.saturation = 0;

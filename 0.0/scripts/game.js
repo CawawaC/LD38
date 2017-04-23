@@ -1,5 +1,5 @@
 var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false;
-var nombreDeFormesDomestiquesInitiales = 5;
+var nombreDeFormesDomestiquesInitiales = 1;
 var vieillesse = true, vieillissementRapide = 10;
 var prairie;
 var traceDePrairie;
@@ -128,7 +128,7 @@ window.onload = function ()
     
     function renouvelerFormeSauvage() {
         formeSauvage.formeAleatoire();
-       // formeSauvage.trace01.position.x =largeurCanvas/2;
+        formeSauvage.trace01.position.x =largeurCanvas/2;
         formeSauvage.trace01.position.y =300;
         
         //TweenVersGauche();
@@ -199,6 +199,7 @@ window.onload = function ()
         }
         
         else if(formeSauvage.mouseDown(event.point)) {
+            
             var f = formeSauvage;
             jouerUnSonDeForme([
                 [f.indexDeForme[2], 2, f.indexDeCouleur],
@@ -210,6 +211,8 @@ window.onload = function ()
          for (var i = groupeDomestique.length-1; i>=0; i--)
         {
             groupeDomestique[i].mouseDown(event.point);
+            if(groupeDomestique[i].mouseDown(event.point))
+            console.info("fs");
             
             if( groupeDomestique[i].glisse)
             {
@@ -332,7 +335,7 @@ window.onload = function ()
             renouvelerFormeSauvage();
         if(!paused)
         pauseTime = false;
-                resetCompteARebours();
+        resetCompteARebours();
         createjs.Tween.get( formeSauvage.trace01.position)
           .to( {  x:  largeurCanvas/2 }, 500, createjs.Ease.quadOut ) ;
     }
