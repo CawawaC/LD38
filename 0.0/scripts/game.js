@@ -324,7 +324,7 @@ window.onload = function ()
                 }
             }
         }
-                
+        
         if(groupeDomestique.length == 0) {
             //Game over
             menu.trace.visible = true;
@@ -346,7 +346,7 @@ window.onload = function ()
        
             TweenVersCentre();
             dropInterdit = true;
-      } )  ;
+      } );
     }
     
      function TweenVersCentre()
