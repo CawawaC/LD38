@@ -120,7 +120,7 @@ window.onload = function ()
     menu = new Bouton(0, 0, 250, 500);
     menu.trace.visible = false;
     menu.traceDeRectangle(175, 300, 275, 500);
-    
+    menu.trace.fillColor="#034049";
     var myPath = new Path();
 myPath.strokeColor = 'white';
     myPath.strokeWeight= 2;
@@ -129,7 +129,7 @@ myPath.add(new Point(325, 300));
     
     texteTutoriel = new paper.PointText(new paper.Point(80, 180));
 //    texteTutoriel = new paper.PointText();
-    texteTutoriel.fillColor = '#015A68';
+    texteTutoriel.fillColor = '#0b91a5';
     texteTutoriel.visible = false;
     texteTutoriel.fontSize = 15;
     texteTutoriel.position.x =180;
