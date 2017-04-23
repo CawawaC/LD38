@@ -308,6 +308,7 @@ texteTutoriel.justification = 'center';
             if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
             formeGlisse.mouseUp(event.point);
          }
+         formeGlisse =null;
 	}
 		
 	//paper JS event enter frame
