@@ -21,6 +21,20 @@ window.onload = function()
 	//paper JS event enter frame
 	view.onFrame = function (event)
 	{
-		player.update(mousePoint);
+		//player.update(mousePoint);
 	}
+    
+    createjs.Tween.get( player.path.position, { loop: true } )
+  .to( { x: 300 }, 1000, createjs.Ease.quadOut )
+  .wait( 2000 )
+  .to( { x: 100, y: 300 }, 1000, createjs.Ease.quadOut )
+  .wait( 2000 )
+  .to( { x: 100, y: 100 }, 1000, createjs.Ease.quadOut )
+  .wait( 2000 )
+  .call( function() {
+    console.log( 'done!' );
+  } );
+    
+    createjs.Ticker.setFPS( 60 );
+   createjs.Ticker.addEventListener( 'tick', update );
 }
