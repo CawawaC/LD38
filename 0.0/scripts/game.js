@@ -129,8 +129,11 @@ window.onload = function ()
     function renouvelerFormeSauvage() {
 //        formeSauvage.destroy();
         formeSauvage.formeAleatoire();
-
+<<<<<<< HEAD
+        formeSauvage.trace01.position.x =300;
+=======
         formeSauvage.trace01.position.x =largeurCanvas/2;
+>>>>>>> Sachasamuse
         formeSauvage.trace01.position.y =300;
         
         TweenVersGauche();
@@ -263,7 +266,15 @@ window.onload = function ()
                 }
 //              formeGlisse.destroy();
 
-
+<<<<<<< HEAD
+                formeGlisse = null; 
+//<<<<<<< HEAD
+//                resetCompteARebours();
+//                renouvelerFormeSauvage();
+//=======
+=======
+//                formeGlisse.destroy();
+>>>>>>> Sachasamuse
                /* resetCompteARebours();
                 renouvelerFormeSauvage();*/
                  TweenVersCentreRetardee();
@@ -334,12 +345,14 @@ window.onload = function ()
     }
     function TweenVersGauche()
     {
-
+<<<<<<< HEAD
+=======
         renouvelerFormeSauvage();
         formeSauvage.trace01.position.x =  -100 ;
         if(!paused)
         pauseTime = false;
         resetCompteARebours();
+>>>>>>> Sachasamuse
         createjs.Tween.get( formeSauvage.trace01.position)
           .to( { x: 100, y: 300 }, 1000, createjs.Ease.quadOut )  
           .call( function() {

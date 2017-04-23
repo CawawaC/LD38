@@ -86,7 +86,11 @@ Forme.prototype.formeAleatoire = function() {
         _figureName = this.figures[index];
         
         figure = this.creationTrace(_figureName);
-
+<<<<<<< HEAD
+        //figure.fillColor = _figureColor;
+=======
+//        figure.fillColor = _figureColor;
+>>>>>>> Sachasamuse
         figure.position.y = i*80;
 //        this.trace01Segments[i]=[];
       /* for(var j = 0; j<figure.segments.length; j++)
@@ -105,10 +109,27 @@ Forme.prototype.formeAleatoire = function() {
         
         figure.remove();
     }
-
+<<<<<<< HEAD
+    var figureUnifiee;
+    figureUnifiee = figures[0].unite(figures[1]);
+    figureUnifiee = figureUnifiee.unite(figures[2]);
+=======
+//    var figureUnifiee;
+//    figureUnifiee = figuresTemp[0].unite(figuresTemp[1]);
+//    figureUnifiee = figureUnifiee.unite(figuresTemp[2]);
+//        
+//    figuresTemp[0].remove();
+//    figuresTemp[1].remove();
+//    figuresTemp[2].remove();
+>>>>>>> Sachasamuse
     
 //    this.trace01.addChild(figureUnifiee);
 
+<<<<<<< HEAD
+    this.trace01.fillColor = _figureColor;
+=======
+    this.trace01.fillColor =_figureColor;
+>>>>>>> Sachasamuse
    // this.trace01.fillColor.alpha =.5;
     console.log(this.trace01.fillColor.alpha);
 }
@@ -179,7 +200,27 @@ Forme.prototype.domesticationDeLaSauvage = function() {
     domestique.trace01.remove();
     domestique.trace01 = this.trace01;
 //    domestique.trace01 = this.trace01;
-
+    
+<<<<<<< HEAD
+    for(var i = 0 ; i < 3 ; ++i) {
+        var figure;
+        figure = this.creationTrace(this.paramForme[i][0]);
+        //figure.fillColor = this.paramForme[i][1];
+        figure.position.y = i*80;
+        domestique.trace01.addChild(figure);   
+    }
+    
+    domestique.domestication();
+//<<<<<<< HEAD
+//
+//    domestique.trace01.x = largeurCanvas/2;
+//    domestique.y =300;
+//
+//=======
+    domestique.trace01.position.x = largeurCanvas/2;
+    domestique.trace01.position.y =300;
+//>>>>>>> nat
+=======
 //    for(var i = 0 ; i < 3 ; ++i) {
 //        var figure;
 //        figure = this.creationTrace(this.paramForme[i][0]);
@@ -191,7 +232,7 @@ Forme.prototype.domesticationDeLaSauvage = function() {
     domestique.domestication();
 //    domestique.trace01.position.x = largeurCanvas/2;
 //    domestique.trace01.position.y =300;
-
+>>>>>>> Sachasamuse
     domestique.ramenerDansLaPrairie();
 //    domestique.trace01.position.x=centerX;
 //    domestique.trace01.position.y=centerY;
@@ -207,8 +248,19 @@ function desaturation(couleur, incrementDeVieillessement) {
 }
 
 Forme.prototype.update = function(mousePoint)
-
+<<<<<<< HEAD
+{	
+    if(!pauseMovement)
+        for(var i = 0; i<this.trace01.children.length; i++)
+        {
+            
+            //console.log(this.trace01.children[i].fillColor.red);
+        }
+    
+         
+=======
 {	     
+>>>>>>> Sachasamuse
     if(this.glisse && this.touchable)
     {
         this.trace01.position.x =(mousePoint.x);
