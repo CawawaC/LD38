@@ -106,7 +106,7 @@ Forme.prototype.formeAleatoire = function() {
     
     this.trace01.addChild(figureUnifiee);
 
-    this.trace01.fillColor = new Color(0.5, 0, 0.5,.5);
+    this.trace01.fillColor = _figureColor;
    // this.trace01.fillColor.alpha =.5;
     console.log(this.trace01.fillColor.alpha);
 }
