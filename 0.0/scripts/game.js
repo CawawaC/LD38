@@ -255,7 +255,7 @@ window.onload = function ()
         hitResult = formeSauvage.trace01.hitTest(event.point, {
             segments: true,
             stroke: true,
-            fill: false,
+            fill: true,
             tolerance: 5
         });
 
