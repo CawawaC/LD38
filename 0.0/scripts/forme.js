@@ -70,7 +70,6 @@ Forme.prototype.formeAleatoire = function() {
     for( var i = 0; i <3; i++)
     {
         var index = Math.floor(Math.random()*this.figures.length);
-        
         this.indexDeForme.push(index);
         _figureName = this.figures[index];
         
@@ -166,7 +165,7 @@ Forme.prototype.update = function(mousePoint)
         for(var i = 0; i<this.trace01.children.length; i++)
         {
             if(vieillesse) {
-                this.trace01.chldren[i].fillColor.saturation-=0.01;
+                this.trace01.children[i].fillColor.saturation -= 0.01;
                 if(this.trace01.children[i].fillColor.saturation<=0) this.trace01.children[i].fillColor.saturation=0;
             }
             //console.log(this.trace01.children[i].fillColor.red);

@@ -2,6 +2,7 @@ var /*pause = false, */pauseTime = false, pauseMovement = false;
 var nombreDeFormesDomestiquesInitiales = 5;
 var vieillesse = false;
 var prairie;
+var date;
 
 var textCompteARebours;
 var compte = 4000;
@@ -18,6 +19,7 @@ var texteTutoriel;
 paper.install(window);
 window.onload = function ()
 {
+    date = new Date();
     
     largeurCanvas = document.getElementById("gameCanvas").width;
     hauteurCanvas = document.getElementById("gameCanvas").height;
@@ -177,6 +179,8 @@ window.onload = function ()
     
     tool.onMouseDown = function(event)
 	{
+        mouseDownTemps = date.getTime();
+        
         if(boutonDePause.mouseDown(event.point)) {
             togglePause();
             toggleMenu();
@@ -214,27 +218,18 @@ window.onload = function ()
     
      tool.onMouseUp = function(event)
      {
+         deltaTemps = mouseDownTemps - date.getTime();
          
-        /*var hitResult = formeDomestique.trace01.intersects(formeSauvage.trace01);
 
-        if (hitResult)
-        {
-           console.log('collide');
-        }
-         */
-        var hitResult ;
+        var hitResult;
 
-        // for (var i = 0; i<groupeDomestique.length; i++)
-       // {         
-             
-           // hitResult = groupeDomestique[i].trace01.intersects(formeSauvage.trace01);
         hitResult = formeSauvage.trace01.hitTest(event.point, {
             segments: true,
             stroke: true,
             fill: true,
             tolerance: 5
         });
-         
+
          if (hitResult) {   
              if(formeGlisse != null) {
                 if(formeGlisse.estSimilaireA(formeSauvage))
@@ -257,6 +252,7 @@ window.onload = function ()
             if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
             formeGlisse.mouseUp(event.point);
          }
+         formeGlisse = null;
 	}
 		
 	//paper JS event enter frame
