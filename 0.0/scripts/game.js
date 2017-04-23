@@ -1,6 +1,6 @@
 var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false;
-var nombreDeFormesDomestiquesInitiales = 1;
-var vieillesse = true, vieillissementRapide = 10;
+var nombreDeFormesDomestiquesInitiales = 5;
+var vieillesse = true, vieillissementRapide = 0;
 var prairie;
 var traceDePrairie;
 var date;
@@ -127,6 +127,7 @@ window.onload = function ()
     traceDePrairie = tracerLaPrairie();
     
     function renouvelerFormeSauvage() {
+//        formeSauvage.destroy();
         formeSauvage.formeAleatoire();
         formeSauvage.trace01.position.x =largeurCanvas/2;
         formeSauvage.trace01.position.y =300;
@@ -210,7 +211,7 @@ window.onload = function ()
         
          for (var i = groupeDomestique.length-1; i>=0; i--)
         {
-            groupeDomestique[i].mouseDown(event.point);
+//            groupeDomestique[i].mouseDown(event.point);
             if(groupeDomestique[i].mouseDown(event.point))
             console.info("fs");
             
@@ -249,18 +250,24 @@ window.onload = function ()
              if(formeGlisse != null) {
                 if(formeGlisse.estSimilaireA(formeSauvage))
                 {
+                    console.log("bon drop");
                     groupeDomestique.push(formeSauvage.domesticationDeLaSauvage());
                     if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
                     formeGlisse.mouseUp(event.point);
+//                    formeSauvage.destroy();
                 } else {
+                    console.log("mauvais drop");
                     //kill formeglisse
                     var index = groupeDomestique.indexOf(formeGlisse);
+                    groupeDomestique[index].destroy();
                     groupeDomestique.splice(index, 1);
                     formeGlisse.meurs();
+                    formeSauvage.destroy();
 //                    groupeDomestique[index].destroy();
                 }
+//              formeGlisse.destroy();
 
-                formeGlisse = null; 
+//                formeGlisse.destroy();
                /* resetCompteARebours();
                 renouvelerFormeSauvage();*/
                  TweenVersCentreRetardee();
@@ -269,12 +276,12 @@ window.onload = function ()
             if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
             formeGlisse.mouseUp(event.point);
          }
-         formeGlisse = null;
 	}
 		
 	//paper JS event enter frame
 	view.onFrame = function (event)
 	{
+        console.log(groupeDomestique.length);
 		//formeDomestique.update(mousePoint);
        /* for (var i = 0; i<groupeDomestique.length; i++)
         {
@@ -296,7 +303,7 @@ window.onload = function ()
 //                    groupeDomestique[j].rebondit();
 //                }
 //            }
-             if(groupeDomestique[i].trace01.children.length>0)
+             if(groupeDomestique[i].trace01 != null)
             {
                 if(groupeDomestique[i].trace01.fillColor != null)
                 if(groupeDomestique[i].trace01.fillColor.saturation == 0)
@@ -331,8 +338,8 @@ window.onload = function ()
     
      function TweenVersCentre()
     {
+        renouvelerFormeSauvage();
         formeSauvage.trace01.position.x =  -100 ;
-            renouvelerFormeSauvage();
         if(!paused)
         pauseTime = false;
         resetCompteARebours();
@@ -343,7 +350,7 @@ window.onload = function ()
      function TweenVersCentreRetardee()
     {
         
-            renouvelerFormeSauvage();
+        renouvelerFormeSauvage();
         formeSauvage.trace01.position.x =  -100 ;
         if(!paused)
         pauseTime = false;
