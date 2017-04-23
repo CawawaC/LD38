@@ -121,9 +121,20 @@ window.onload = function ()
     menu.traceDeRectangle(200, 400, 300, 500);
     
     texteTutoriel = new paper.PointText(new paper.Point(80, 180));
+//    texteTutoriel = new paper.PointText();
     texteTutoriel.fillColor = 'red';
     texteTutoriel.visible = false;
-    texteTutoriel.content  = "Gloubi blouga";
+    texteTutoriel.characterStyle = {
+        fontSize: 11,
+        font: 'Lobster Two'
+    };
+//    console.log(texteTutoriel.bounds);
+//    texteTutoriel.bounds = new paper. Rectangle(80, 180, 100, 200);
+//    console.log(texteTutoriel.bounds);
+
+    texteTutoriel.content  = "Welcome to Forme Sauvage (in French: \"Wild \nForm\"). You need to capture the wild forms \nappearing in the top half of the screen, using \na matching form among the domesticated ones you own (bottom half). Forms match when they share an identically-colored shape at the same position.";
+    menu.trace.addChild(texteTutoriel);
+    
     
     texteScore = new paper.PointText(new paper.Point(80, 180));
     texteScore.fillColor = 'red';
