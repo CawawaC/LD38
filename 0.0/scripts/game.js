@@ -1,6 +1,14 @@
-var pause = false;
+var /*pause = false, */pauseTime = false, pauseMovement = false;
 var nombreDeFormesDomestiquesInitiales = 5;
-var debugVieillesse = false;
+var vieillesse = false;
+var prairie = {x: 200, y: 600, rayon:150};
+
+var textCompteARebours;
+var compte = 4000;
+var formeGlisse;
+
+
+
 
 paper.install(window);
 window.onload = function ()
@@ -12,13 +20,66 @@ window.onload = function ()
 	// variables et objets
 	var mousePoint = view.center;
     var timerCompteARebours = setInterval(changeCompteARebours, 100);
-    var compte = 4000;
-    var formeGlisse;
+    
+    class Bouton {
+        constructor(x, y, largeur, hauteur) {
+//            this.x = x;
+//            this.y = y;
+//            this.largeur = largeur;
+//            this.hauteur = hauteur;
+
+            this.trace = new Group();
+
+            var figure = new Path();
+
+            var points = 4;
+            figure.closed = true;
+            
+            //Losange
+//            for (var i = 0; i < points; i++) {
+//                var delta = new Point({
+//                    length: largeur/2,
+//                    angle: (360 / points) * i
+//                });
+//                figure.add(delta);
+//            }
+            
+            //Rect
+            figure.add(new Point(x, y));
+            figure.add(new Point(x+largeur, y));
+            figure.add(new Point(x+largeur, y+hauteur));
+            figure.add(new Point(x, y+hauteur));
+            
+            figure.fillColor = "white";
+
+            this.trace.addChild(figure);
+            this.trace.position.x = x;
+            this.trace.position.y = y;
+        }
+        
+        mouseDown(mousePoint) {	
+            var hitResult = this.trace.hitTest(mousePoint, {
+                segments: true,
+                stroke: true,
+                fill: true,
+                tolerance: 5});
+//            console.assert(!hitResult, "click");
+            return hitResult;
+        }
+    }
+    
+    var bouton = new Bouton(300, 100, 50, 50);
+    
+    function renouvelerFormeSauvage() {
+        formeSauvage.formeAleatoire();
+        formeSauvage.trace01.position.x =300;
+        formeSauvage.trace01.position.y =300;
+    }
     
     function changeCompteARebours() { 
-        if(!pause) {
+        if(!pauseTime) {
             compte -= 100;
-//            textCompteARebours.content = (5-Math.floor(compte/10))+" : "+(9-compte%10); 
+    //            textCompteARebours.content = (5-Math.floor(compte/10))+" : "+(9-compte%10); 
             textCompteARebours.content = Math.floor(compte/1000) + ":" + Math.floor(compte%1000)/100;
             if(compte == 0)
             {
@@ -28,19 +89,13 @@ window.onload = function ()
         }
     }
     
-    function renouvelerFormeSauvage() {
-        formeSauvage.formeAleatoire();
-        formeSauvage.trace01.position.x =300;
-        formeSauvage.trace01.position.y =300;
-    }
-    
     function resetCompteARebours() {
         clearInterval(timerCompteARebours);
         timerCompteARebours = setInterval(changeCompteARebours, 100);
         compte = 4000;
     }
     
-    var textCompteARebours = new paper.PointText(new paper.Point(100,100));
+    textCompteARebours = new paper.PointText(new paper.Point(100,100));
 //    console.info(compte);
 //    console.info(textCompteARebours.hasFill());
     textCompteARebours.fillColor = 'white';
@@ -71,7 +126,11 @@ window.onload = function ()
     
     tool.onMouseDown = function(event)
 	{
-        if(formeSauvage.mouseDown(event.point)) {
+        if(bouton.mouseDown(event.point)) {
+            togglePause();
+        }
+        
+        else if(formeSauvage.mouseDown(event.point)) {
             var f = formeSauvage;
             jouerUnSonDeForme([
                 [f.indexDeForme[2], 2, f.indexDeCouleur],
@@ -129,7 +188,7 @@ window.onload = function ()
                 if(formeGlisse.estSimilaireA(formeSauvage))
                 {
                     groupeDomestique.push(formeSauvage.domesticationDeLaSauvage());
-                    formeGlisse.auCentre();
+                    if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
                     formeGlisse.mouseUp(event.point);
                 } else {
                     //kill formeglisse
@@ -138,13 +197,12 @@ window.onload = function ()
                     formeGlisse.meurs();
                 }
 
-                formeGlisse = null;
-
+                formeGlisse = null; 
                 resetCompteARebours();
                 renouvelerFormeSauvage();
              }
-         } else {
-            formeGlisse.auCentre();
+         } else if(formeGlisse != null) {
+            if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
             formeGlisse.mouseUp(event.point);
          }
 	}
@@ -195,4 +253,10 @@ function clone(obj) {
         if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
     }
     return copy;
+}
+
+function togglePause() {
+    console.info("toggle pause");
+    pauseTime = !pauseTime;
+    pauseMovement = !pauseMovement;
 }
