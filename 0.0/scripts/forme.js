@@ -340,7 +340,6 @@ Forme.prototype.mouseDown = function(mousePoint)
     
     //Inversion du vieillissement (rajeunit pendent qu'elle est saisie)
 //    this.vieillissementInverse = true;
-    this.incrementDeVieillessement.valeur *= -1;
 
 	
 	if (hitResult)

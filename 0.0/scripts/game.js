@@ -74,7 +74,8 @@ window.onload = function ()
 
             this.trace.addChild(bg);
             this.trace.addChild(figure1);
-            this.trace.addChild(figure2)
+            this.trace.addChild(figure2);
+//            this.trace.addChild(dessinerPlay());
         }
         
         traceDeLosange() {
@@ -119,7 +120,7 @@ window.onload = function ()
     menu = new Bouton(0, 0, 250, 500);
     menu.trace.visible = false;
     menu.traceDeRectangle(175, 300, 275, 500);
-    
+    menu.trace.fillColor="#034049";
     var myPath = new Path();
 myPath.strokeColor = 'white';
     myPath.strokeWeight= 2;
@@ -128,7 +129,7 @@ myPath.add(new Point(325, 300));
     
     texteTutoriel = new paper.PointText(new paper.Point(80, 180));
 //    texteTutoriel = new paper.PointText();
-    texteTutoriel.fillColor = '#015A68';
+    texteTutoriel.fillColor = '#0b91a5';
     texteTutoriel.visible = false;
     texteTutoriel.fontSize = 15;
     texteTutoriel.position.x =180;
@@ -214,7 +215,7 @@ texteTutoriel.justification = 'center';
     
     tool.onMouseDown = function(event)
 	{
-        mouseDownTemps = date.getTime();
+//        mouseDownTemps = date.getTime();
         
         if(boutonDePause.mouseDown(event.point)) {
            if(paused)
@@ -233,34 +234,32 @@ texteTutoriel.justification = 'center';
                 [f.indexDeForme[1], 1, f.indexDeCouleur],
                 [f.indexDeForme[0], 0, f.indexDeCouleur]
             ]);
-        }
-        
-         for (var i = groupeDomestique.length-1; i>=0; i--)
-        {
-            groupeDomestique[i].mouseDown(event.point);
-//            if(groupeDomestique[i].mouseDown(event.point))
-//                console.info("fs");
-            
-            if( groupeDomestique[i].glisse)
-            {
-                groupeDomestique[i].trace01.bringToFront();
-                var f = groupeDomestique[i];
-                jouerUnSonDeForme([
-                    [f.indexDeForme[2], 2, f.indexDeCouleur],
-                    [f.indexDeForme[1], 1, f.indexDeCouleur],
-                    [f.indexDeForme[0], 0, f.indexDeCouleur]
-                ]);
+        } else {
+             for (var i = groupeDomestique.length-1; i>=0; i--) {
+                if(groupeDomestique[i].mouseDown(event.point))
+                    groupeDomestique[i].incrementDeVieillessement.valeur *= -1;
 
-                formeGlisse = groupeDomestique[i];
-                
-                break;
-            } 
+                if( groupeDomestique[i].glisse)
+                {
+                    groupeDomestique[i].trace01.bringToFront();
+                    var f = groupeDomestique[i];
+                    jouerUnSonDeForme([
+                        [f.indexDeForme[2], 2, f.indexDeCouleur],
+                        [f.indexDeForme[1], 1, f.indexDeCouleur],
+                        [f.indexDeForme[0], 0, f.indexDeCouleur]
+                    ]);
+
+                    formeGlisse = groupeDomestique[i];
+
+                    break;
+                } 
+            }
         }
 	}
     
      tool.onMouseUp = function(event)
      {
-         deltaTemps = mouseDownTemps - date.getTime();
+//         deltaTemps = mouseDownTemps - date.getTime();
          
 
         var hitResult;
@@ -277,6 +276,7 @@ texteTutoriel.justification = 'center';
                  var scoreLocal = formeGlisse.estSimilaireA(formeSauvage);
                 if(scoreLocal > 0)
                 {
+                    feedbackAudioPositif();
                     console.log("bon drop");
                     groupeDomestique.push(formeSauvage.domesticationDeLaSauvage());
                     if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
@@ -288,13 +288,18 @@ texteTutoriel.justification = 'center';
                     texteScore.content = score;
                     console.log(score);
                 } else {
+                    feedbackAudioNegatif();
+
                     console.log("mauvais drop");
                     //kill formeglisse
                     var index = groupeDomestique.indexOf(formeGlisse);
-                    groupeDomestique[index].destroy();
-                    groupeDomestique.splice(index, 1);
+                    if(index >= 0) {
+                        groupeDomestique[index].destroy();
+                        groupeDomestique.splice(index, 1);
+                    }
                     formeGlisse.meurs();
                     formeSauvage.destroy();
+                    
 //                    groupeDomestique[index].destroy();
                 }
 //              formeGlisse.destroy();
@@ -389,8 +394,9 @@ texteTutoriel.justification = 'center';
         .wait (500)
           .to( {  x:  largeurCanvas/2 }, 500, createjs.Ease.quadOut ).call(function(){dropAutorise=true;}) ;
     }
-    
-    function clone(obj) {
+
+function clone(obj) {
+
     if (null == obj || "object" != typeof obj) return obj;
     var copy = obj.constructor();
     for (var attr in obj) {
@@ -403,7 +409,9 @@ function commencerPause() {
     pauseTime = true;
     pauseMovement = true;
     paused = true;
-    createjs.Ticker.paused = true; 
+    createjs.Ticker.paused = true;     
+    
+//    boutonDePause.trace.addChild(dessinerPlay());
 }
 
 function finirPause() {
@@ -451,6 +459,7 @@ function tracerLaPrairie() {
     
     return path;
 }
+
     
     
 function restart(){
@@ -480,4 +489,5 @@ function restart(){
     createjs.Ticker.setFPS( 60 );
    // createjs.Ticker.addEventListener( 'tick', update );
 }
+
 

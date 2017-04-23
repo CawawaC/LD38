@@ -18,7 +18,7 @@ class Oscillator {
         this.envelope.connect(output);
         this.envelope.gain.value = 0;
 
-        this.envelopeAD = [1, 0.2, 0, 0.5];
+        this.envelopeAD = [1, 0.1, 0, 0.5];
 
         this.osc.connect(this.envelope);
     }
@@ -33,7 +33,7 @@ class Oscillator {
     }
 
     playNote(note) {
-//        console.info("je joue une note : " + note);
+        console.info("je joue une note : " + note);
         this.setNote(note);
         this.linearAmplitudeBurst(context.currentTime, this.envelopeAD[0], this.envelopeAD[1], this.envelopeAD[2], this.envelopeAD[3]);
     }
@@ -46,7 +46,7 @@ class Oscillator {
     //Disconnects from all outputs !!!
     connect(output) {
         this.envelope.disconnect();
-        this.envelope.connect(ouput);
+        this.envelope.connect(output);
     }
 
     linearAmplitudeBurst(startTime, value1, attackLength, value2, decayTime) {
@@ -262,6 +262,7 @@ var spectrogramme;
 //    kick, snare, hihat, testOsc, fmOsc,
 var sequencerInterval;
 
+var oscillateurFeedback;
 
 
 //                           //
@@ -275,6 +276,18 @@ function audioInit() {
     masterGain = context.createGain();
     masterGain.gain.value = 0.5;
 
+    oscillateurFeedback = new Oscillator(context, masterGain);
+    var real = new Float32Array(4);
+    var imag = new Float32Array(4);
+
+    real[0] = 0;
+    imag[0] = 0;
+    real[1] = 1;
+    imag[1] = 0;
+    real[2] = 1;
+    var onde = context.createPeriodicWave(real, imag);
+    oscillateurFeedback.osc.setPeriodicWave(onde);
+    
     /*kick = context.createOscillator();
     //kick.gain.value = 1;
     kick.connect(masterGain);
@@ -310,6 +323,8 @@ function audioInit() {
     delayGain.gain.value = 0.65;
     delay.connect(delayGain);
     delayGain.connect(delay);
+    
+    oscillateurFeedback.connect(masterGain);
 
     spectrogramme = context.createAnalyser();
     
@@ -536,4 +551,19 @@ function son3() {
         [0, 1, 0],
         [0, 1, 1],
         [3, 1, 0]]);
+}
+
+
+function feedbackAudioPositif() {
+    oscillateurFeedback.envelope.gain.linearRampToValueAtTime(1, context.currentTime+0.01)
+    oscillateurFeedback.osc.frequency.setValueAtTime(500, context.currentTime);
+    oscillateurFeedback.osc.frequency.linearRampToValueAtTime(900, context.currentTime+0.1);
+    oscillateurFeedback.envelope.gain.linearRampToValueAtTime(0, context.currentTime+0.1);
+}
+
+function feedbackAudioNegatif() {
+    oscillateurFeedback.envelope.gain.linearRampToValueAtTime(1, context.currentTime+0.01)
+    oscillateurFeedback.osc.frequency.setValueAtTime(500, context.currentTime);
+    oscillateurFeedback.osc.frequency.linearRampToValueAtTime(100, context.currentTime+0.1);
+    oscillateurFeedback.envelope.gain.linearRampToValueAtTime(0, context.currentTime+0.1);
 }
