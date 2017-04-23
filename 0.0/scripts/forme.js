@@ -392,8 +392,9 @@ Forme.prototype.creationTraceCorps = function(figure)
         case"rond":            
 			path=this.creationPath(50,12,0,0);
 			path = path.unite(this.creationPath(15,4,-70,0));
-			path = path.unite(this.creationPath(15,4,70,0));	
+			path = path.unite(this.creationPath(15,4,70,0));			
 			path = path.subtract(this.creationPath(17,12,0,0));
+			path = path.unite(this.creationPath(12,12,00,0));
             break;
         case"carre":
             path=this.creationPath(55,4,0,0);	

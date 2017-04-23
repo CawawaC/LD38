@@ -121,6 +121,12 @@ window.onload = function ()
     menu.trace.visible = false;
     menu.traceDeRectangle(200, 400, 300, 500);
     
+    var myPath = new Path();
+myPath.strokeColor = 'white';
+    myPath.strokeWeight= 2;
+myPath.add(new Point(25, 300));
+myPath.add(new Point(325, 300));
+    
     texteTutoriel = new paper.PointText(new paper.Point(80, 180));
 //    texteTutoriel = new paper.PointText();
     texteTutoriel.fillColor = 'red';
@@ -134,9 +140,10 @@ window.onload = function ()
     menu.trace.addChild(texteTutoriel);
     
     
-    texteScore = new paper.PointText(new paper.Point(80, 180));
-    texteScore.fillColor = 'red';
-    texteScore.content  = "Score: 0";
+    texteScore = new paper.PointText(new paper.Point(20, 40));
+    texteScore.fillColor = 'white';
+    texteScore.content  = "0";
+    texteScore.fontSize=30;
     
    //traceDePrairie = tracerLaPrairie();
     
@@ -144,7 +151,8 @@ window.onload = function ()
 //        formeSauvage.destroy();
         formeSauvage.formeAleatoire();
         formeSauvage.trace01.position.x =largeurCanvas/2;
-        formeSauvage.trace01.position.y =150;
+        formeSauvage.trace01.position.y =180;
+        textCompteARebours.fillColor = formeSauvage.trace01.children[1].fillColor;
         
         //TweenVersGauche();
     }
@@ -153,7 +161,7 @@ window.onload = function ()
         if(!pauseTime) {
             compte -= 100;
     //            textCompteARebours.content = (5-Math.floor(compte/10))+" : "+(9-compte%10); 
-            textCompteARebours.content = Math.floor(compte/1000) + ":" + Math.floor(compte%1000)/100;
+            textCompteARebours.content = Math.floor(compte/1000) + "." + Math.floor(compte%1000)/100;
             if(compte == 0)
             {
               pauseTime = true;
@@ -170,11 +178,7 @@ window.onload = function ()
         compte = 4000;
     }
     
-    textCompteARebours = new paper.PointText(new paper.Point(100,100));
-//    console.info(compte);
-//    console.info(textCompteARebours.hasFill());
-    textCompteARebours.fillColor = 'white';
-    textCompteARebours.content = '0';
+    
 
     
     var formeSauvage = Forme();
@@ -182,7 +186,14 @@ window.onload = function ()
 	formeSauvage.create();
     formeSauvage.touchable=false;
     formeSauvage.trace01.position.x =largeurCanvas/2;
-    formeSauvage.trace01.position.y =150;
+    formeSauvage.trace01.position.y =180;
+    
+    textCompteARebours = new paper.PointText(new paper.Point(150,40));
+//    console.info(compte);
+//    console.info(textCompteARebours.hasFill());
+    textCompteARebours.fillColor =  formeSauvage.trace01.children[1].fillColor;
+    textCompteARebours.content = '0';
+    textCompteARebours.fontSize =30;
     
     var groupeDomestique = [];
     
@@ -271,7 +282,7 @@ window.onload = function ()
                     formeGlisse.trace01.children[1].fillColor.alpha = 1;
                     
                     score += scoreLocal;
-                    texteScore.content = "Score: "+score;
+                    texteScore.content = score;
                     console.log(score);
                 } else {
                     console.log("mauvais drop");
@@ -352,6 +363,7 @@ window.onload = function ()
     {
         dropAutorise = false;
         renouvelerFormeSauvage();
+        
         formeSauvage.trace01.position.x =  -100 ;
         if(!paused)
         pauseTime = false;
