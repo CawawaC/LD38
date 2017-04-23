@@ -384,10 +384,10 @@ function jouerUnSonDeForme(superTableau) {
         },
         200);    //set interval is in ms
     
-    ondulerLaPrairie();
+    //ondulerLaPrairie();
 }
 
-function ondulerLaPrairie() {
+/*function ondulerLaPrairie() {
     var bufferLength = spectrogramme.frequencyBinCount;
     var dataArray = new Uint8Array(bufferLength);
     spectrogramme.getByteTimeDomainData(dataArray);
@@ -403,7 +403,7 @@ function ondulerLaPrairie() {
     }
     
 }
-
+*/
 
 //              //
 //  SEQUENCER   //

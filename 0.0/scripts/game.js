@@ -2,7 +2,7 @@ var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false;
 var nombreDeFormesDomestiquesInitiales = 5;
 var vieillesse = true, vieillissementRapide = 0;
 var prairie;
-var traceDePrairie;
+//var traceDePrairie;
 var date;
 
 var score;
@@ -29,7 +29,7 @@ window.onload = function ()
     
     largeurCanvas = document.getElementById("gameCanvas").width;
     hauteurCanvas = document.getElementById("gameCanvas").height;
-    prairie = {x: largeurCanvas/2, y: hauteurCanvas*3/4, rayon:150};
+    prairie = {x: largeurCanvas/2, y: hauteurCanvas*3/4, rayon:120};
 
 	// setup paper JS
 	paper.setup('gameCanvas');
@@ -129,13 +129,13 @@ window.onload = function ()
     texteScore.fillColor = 'red';
     texteScore.content  = "Score: 0";
     
-    traceDePrairie = tracerLaPrairie();
+   //traceDePrairie = tracerLaPrairie();
     
     function renouvelerFormeSauvage() {
 //        formeSauvage.destroy();
         formeSauvage.formeAleatoire();
         formeSauvage.trace01.position.x =largeurCanvas/2;
-        formeSauvage.trace01.position.y =300;
+        formeSauvage.trace01.position.y =150;
         
         //TweenVersGauche();
     }
@@ -173,7 +173,7 @@ window.onload = function ()
 	formeSauvage.create();
     formeSauvage.touchable=false;
     formeSauvage.trace01.position.x =largeurCanvas/2;
-    formeSauvage.trace01.position.y =300;
+    formeSauvage.trace01.position.y =150;
     
     var groupeDomestique = [];
     

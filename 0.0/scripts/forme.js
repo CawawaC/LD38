@@ -1,5 +1,5 @@
 
-var petiteEchelle = 0.25, grandeEchelle = 4;
+var petiteEchelle = 0.25, grandeEchelle = 3;
 
 function Forme()
 { 
@@ -10,7 +10,7 @@ function Forme()
     this.vitesseY;
     this.touchable;
     this.glisse;
-    this.colors = ['#140245', '#784537', '#478952'];
+    this.colors = ['#5FC5ED', '#F7C660', '#E38C5A'];
     this.figures = ['rond', 'carre', 'triangle'];
     this.formesComposantes = [];
     this.vieillissement;    //Interval
@@ -28,6 +28,7 @@ Forme.prototype.create= function()
     var _figureColor;
     
     this.formeAleatoire();
+   
     
     //spawn
     //this.ramenerDansLaPrairie();
@@ -118,7 +119,7 @@ Forme.prototype.formeAleatoire = function() {
 //    figuresTemp[2].remove();
     
 //    this.trace01.addChild(figureUnifiee);
-
+ this.trace01.scale(.7);
     this.trace01.fillColor =_figureColor;
    // this.trace01.fillColor.alpha =.5;
 }
