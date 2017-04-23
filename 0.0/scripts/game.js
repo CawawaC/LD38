@@ -1,18 +1,28 @@
 var /*pause = false, */pauseTime = false, pauseMovement = false;
 var nombreDeFormesDomestiquesInitiales = 5;
 var vieillesse = false;
-var prairie = {x: 200, y: 600, rayon:150};
+var prairie;
 
 var textCompteARebours;
 var compte = 4000;
 var formeGlisse;
 
+var boutonDePause;
+var menu;
 
+var largeurCanvas;
+var hauteurCanvas;
 
+var texteTutoriel;
 
 paper.install(window);
 window.onload = function ()
 {
+    
+    largeurCanvas = document.getElementById("gameCanvas").width;
+    hauteurCanvas = document.getElementById("gameCanvas").height;
+    prairie = {x: largeurCanvas/2, y: hauteurCanvas*3/4, rayon:150};
+
 	// setup paper JS
 	paper.setup('gameCanvas');
 	var tool = new Tool();
@@ -23,41 +33,74 @@ window.onload = function ()
     
     class Bouton {
         constructor(x, y, largeur, hauteur) {
-//            this.x = x;
-//            this.y = y;
-//            this.largeur = largeur;
-//            this.hauteur = hauteur;
-
             this.trace = new Group();
 
-            var figure = new Path();
+            this.traceDePause(0, 0, largeur, hauteur);
+            
+            this.trace.position.x = x;
+            this.trace.position.y = y;
+        }
+        
+        traceDePause(x, y, largeur, hauteur) {
+            this.trace.removeChildren();
+            
+            var bg = new Path();
+            var figure1 = new Path();
+            var figure2 = new Path();
+            
+            bg.close = true;
+            figure1.closed = true;
+            figure2.close = true;
 
-            var points = 4;
-            figure.closed = true;
+            bg = new Path.Rectangle(new Point(0, 0), new Point(largeur, hauteur));
             
-            //Losange
-//            for (var i = 0; i < points; i++) {
-//                var delta = new Point({
-//                    length: largeur/2,
-//                    angle: (360 / points) * i
-//                });
-//                figure.add(delta);
-//            }
+            var offsetx = 0;
+            figure1 = new Path.Rectangle(new Point(0, 0), new Point(10, hauteur));
+            figure2 = new Path.Rectangle(new Point(0, 0), new Point(10, hauteur));
+            figure2.position.x = 32;
+
+            bg.fillColor = "white"; 
+            bg.fillColor.alpha = 0.01;
+            figure1.fillColor = "white";
+            figure2.fillColor = "white";
+
+            this.trace.addChild(bg);
+            this.trace.addChild(figure1);
+            this.trace.addChild(figure2)
+        }
+        
+        traceDeTriangle() {
             
-            //Rect
-            figure.add(new Point(x, y));
-            figure.add(new Point(x+largeur, y));
-            figure.add(new Point(x+largeur, y+hauteur));
-            figure.add(new Point(x, y+hauteur));
+        }
+        
+        traceDeLosange() {
+            for (var i = 0; i < points; i++) {
+                var delta = new Point({
+                    length: largeur/2,
+                    angle: (360 / points) * i
+                });
+                figure.add(delta);
+            }
+        }
+        
+        traceDeRectangle(x, y, largeur, hauteur) {
+            var figure = new Path();
+            
+            var from = new Point(0, 0);
+            var to = new Point(largeur, hauteur);
+            figure = new Path.Rectangle(from, to);
             
             figure.fillColor = "white";
-
+            this.trace.removeChildren();
             this.trace.addChild(figure);
+            
             this.trace.position.x = x;
             this.trace.position.y = y;
         }
         
         mouseDown(mousePoint) {	
+            if(!this.trace.visible) return false;
+            
             var hitResult = this.trace.hitTest(mousePoint, {
                 segments: true,
                 stroke: true,
@@ -68,7 +111,15 @@ window.onload = function ()
         }
     }
     
-    var bouton = new Bouton(300, 100, 50, 50);
+    boutonDePause = new Bouton(300, 100, 30, 50);
+    menu = new Bouton(50, 50, 300, 500);
+    menu.trace.visible = false;
+    menu.traceDeRectangle(200, 400, 300, 500);
+    
+    texteTutoriel = new paper.PointText(new paper.Point(80, 180));
+    texteTutoriel.fillColor = 'red';
+    texteTutoriel.visible = false;
+    texteTutoriel.content  = "Gloubi blouga";
     
     function renouvelerFormeSauvage() {
         formeSauvage.formeAleatoire();
@@ -126,8 +177,9 @@ window.onload = function ()
     
     tool.onMouseDown = function(event)
 	{
-        if(bouton.mouseDown(event.point)) {
+        if(boutonDePause.mouseDown(event.point)) {
             togglePause();
+            toggleMenu();
         }
         
         else if(formeSauvage.mouseDown(event.point)) {
@@ -223,14 +275,14 @@ window.onload = function ()
          for (var i = 0; i < groupeDomestique.length; i++)
         {
             groupeDomestique[i].update(mousePoint);
-            for(var j = 0 ; j < groupeDomestique.length ; j++)
-            {
-                if(groupeDomestique[i].trace01.intersects(groupeDomestique[j].trace01))
-                {
-                    groupeDomestique[i].rebondit();
-                    groupeDomestique[j].rebondit();
-                }
-            }
+//            for(var j = 0 ; j < groupeDomestique.length ; j++)
+//            {
+//                if(groupeDomestique[i].trace01.intersects(groupeDomestique[j].trace01))
+//                {
+//                    groupeDomestique[i].rebondit();
+//                    groupeDomestique[j].rebondit();
+//                }
+//            }
              if( groupeDomestique[i].trace01.children.length>0)
             {
                 if( groupeDomestique[i].trace01.children[0].fillColor.saturation == 0)
@@ -259,4 +311,12 @@ function togglePause() {
     console.info("toggle pause");
     pauseTime = !pauseTime;
     pauseMovement = !pauseMovement;
+}
+
+function toggleMenu() {
+    menu.trace.visible = !menu.trace.visible;
+    if(menu.trace.visible)  menu.trace.bringToFront();
+    else                    menu.trace.sendToBack();
+    texteTutoriel.visible = !texteTutoriel.visible;
+    texteTutoriel.bringToFront();
 }
