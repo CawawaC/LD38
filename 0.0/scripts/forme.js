@@ -1,6 +1,4 @@
 
-var centerX = 200;
-var centerY = 600;
 var petiteEchelle = 0.2, grandeEchelle = 2;
 
 function Forme()
@@ -31,7 +29,7 @@ Forme.prototype.create= function()
     this.formeAleatoire();
     
     //spawn
-    this.auCentre();
+    this.ramenerDansLaPrairie();
 //    this.trace01.position.x=centerX;
 //    this.trace01.position.y=centerY;
     
@@ -127,9 +125,16 @@ Forme.prototype.creationTrace = function(figure)
 	return path;
 }
 
-Forme.prototype.auCentre = function() {
-    this.trace01.position.x=centerX;
-    this.trace01.position.y=centerY;
+Forme.prototype.ramenerDansLaPrairie = function() {
+//    pauseTime = true;
+    this.trace01.position.x=prairie.x;
+    this.trace01.position.y=prairie.y;
+//    pauseTime = false;
+}
+
+Forme.prototype.estDansLaPrairie = function() {
+    var distanceAuCentre = Math.sqrt(Math.pow(this.trace01.position.x-prairie.x, 2) + Math.pow(this.trace01.position.y-prairie.y, 2));
+    return distanceAuCentre < prairie.rayon;
 }
 
 Forme.prototype.domesticationDeLaSauvage = function() {
@@ -148,7 +153,7 @@ Forme.prototype.domesticationDeLaSauvage = function() {
     }
     
     domestique.domestication();
-    domestique.auCentre();
+    domestique.ramenerDansLaPrairie();
 //    domestique.trace01.position.x=centerX;
 //    domestique.trace01.position.y=centerY;
     
@@ -157,13 +162,13 @@ Forme.prototype.domesticationDeLaSauvage = function() {
 
 Forme.prototype.update = function(mousePoint)
 {	
-   if(!pause)
-   for(var i = 0; i<this.trace01.children.length; i++)
+    if(!pauseMovement)
+        for(var i = 0; i<this.trace01.children.length; i++)
         {
-            if(debugVieillesse)
-           this.trace01.children[i].fillColor.saturation-=0.01;
-
-            if(this.trace01.children[i].fillColor.saturation<=0) this.trace01.children[i].fillColor.saturation=0;
+            if(vieillesse) {
+                this.trace01.chldren[i].fillColor.saturation-=0.01;
+                if(this.trace01.children[i].fillColor.saturation<=0) this.trace01.children[i].fillColor.saturation=0;
+            }
             //console.log(this.trace01.children[i].fillColor.red);
         }
     
@@ -186,12 +191,12 @@ Forme.prototype.update = function(mousePoint)
      
  
     } else if(!this.glisse && this.touchable) {
-        if(!pause) {
+        if(!pauseMovement) {
             var newX = this.trace01.position.x + this.vitesseX;
             var newY = this.trace01.position.y + this.vitesseY;
-            var distToCenter = Math.sqrt(Math.pow(newX-centerX, 2) + Math.pow(newY-centerY, 2));
+            var distanceAuCentre = Math.sqrt(Math.pow(newX-prairie.x, 2) + Math.pow(newY-prairie.y, 2));
 
-            if(distToCenter < 120) {
+            if(distanceAuCentre < prairie.rayon) {
                 this.trace01.position.x = newX;
                 this.trace01.position.y = newY;
             } else {
