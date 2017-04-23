@@ -1,6 +1,6 @@
-var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false;
+var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false, gameOver = false;
 var nombreDeFormesDomestiquesInitiales = 5;
-var vieillesse = true, vieillissementRapide = 1;
+var vieillesse = true, vieillissementRapide = 5;
 var prairie;
 //var traceDePrairie;
 var date;
@@ -341,6 +341,7 @@ texteTutoriel.justification = 'center';
         
         if(groupeDomestique.length == 0) {
             //Game over
+            gameOver = true;
             menu.trace.visible = true;
             menu.trace.bringToFront();
             texteTutoriel.visible = true;
@@ -389,13 +390,7 @@ texteTutoriel.justification = 'center';
           .to( {  x:  largeurCanvas/2 }, 500, createjs.Ease.quadOut ).call(function(){dropAutorise=true;}) ;
     }
     
-    audioInit();
-    
-    createjs.Ticker.setFPS( 60 );
-   // createjs.Ticker.addEventListener( 'tick', update );
-}
-
-function clone(obj) {
+    function clone(obj) {
     if (null == obj || "object" != typeof obj) return obj;
     var copy = obj.constructor();
     for (var attr in obj) {
@@ -415,7 +410,10 @@ function finirPause() {
     pauseTime = false;
     pauseMovement = false;
     paused = false;
-    createjs.Ticker.paused = false; 
+    createjs.Ticker.paused = false;
+    
+    if(gameOver)
+        {restart();}
 }
 
 function toggleMenu() {
@@ -425,6 +423,7 @@ function toggleMenu() {
     texteTutoriel.visible = !texteTutoriel.visible;
     texteTutoriel.bringToFront();
 }
+
 
 function tracerLaPrairie() {
 //    var path = new Path.Circle({
@@ -452,3 +451,33 @@ function tracerLaPrairie() {
     
     return path;
 }
+    
+    
+function restart(){
+    
+   gameOver = false;
+    paused = false;
+    score =0;
+      texteScore.content  = score;
+    groupeDomestique = null;
+    groupeDomestique = [];
+   
+    for (var i = 0; i < nombreDeFormesDomestiquesInitiales; i++)
+    {
+        var formeDomestique = new Forme();
+        formeDomestique.creerFormeDomestique(i);
+        formeDomestique.placerDansLaPrairie();
+        groupeDomestique.push(formeDomestique);
+       
+    }
+    
+  resetCompteARebours()
+     formeSauvage.trace01.position.x = -100;        
+}
+    
+    audioInit();
+    
+    createjs.Ticker.setFPS( 60 );
+   // createjs.Ticker.addEventListener( 'tick', update );
+}
+
