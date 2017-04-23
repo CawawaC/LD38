@@ -1,7 +1,9 @@
-var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false;
+var /*pause = false, */pauseTime = false, pauseMovement = false;
 var nombreDeFormesDomestiquesInitiales = 5;
-var vieillesse = false;
+var vieillesse = true, vieillissementRapide = 10;
 var prairie;
+var traceDePrairie;
+var date;
 
 var textCompteARebours;
 var compte = 4000;
@@ -18,6 +20,7 @@ var texteTutoriel;
 paper.install(window);
 window.onload = function ()
 {
+    date = new Date();
     
     largeurCanvas = document.getElementById("gameCanvas").width;
     hauteurCanvas = document.getElementById("gameCanvas").height;
@@ -121,12 +124,14 @@ window.onload = function ()
     texteTutoriel.visible = false;
     texteTutoriel.content  = "Gloubi blouga";
     
+    traceDePrairie = tracerLaPrairie();
+    
     function renouvelerFormeSauvage() {
         formeSauvage.formeAleatoire();
-       // formeSauvage.trace01.position.x =largeurCanvas/2;
+        formeSauvage.trace01.position.x =300;
         formeSauvage.trace01.position.y =300;
         
-        //TweenVersGauche();
+        TweenVersGauche();
     }
     
     function changeCompteARebours() { 
@@ -136,10 +141,9 @@ window.onload = function ()
             textCompteARebours.content = Math.floor(compte/1000) + ":" + Math.floor(compte%1000)/100;
             if(compte == 0)
             {
-              pauseTime = true;
-                /* renouvelerFormeSauvage();
-                resetCompteARebours();*/
-                TweenVersGauche();
+                renouvelerFormeSauvage();
+                resetCompteARebours();
+                  TweenVersDroite();
             }
         }
     }
@@ -161,7 +165,7 @@ window.onload = function ()
     formeSauvage = new Forme();
 	formeSauvage.create();
     formeSauvage.touchable=false;
-    formeSauvage.trace01.position.x =largeurCanvas/2;
+    formeSauvage.trace01.position.x =300;
     formeSauvage.trace01.position.y =300;
     
     var groupeDomestique = [];
@@ -182,12 +186,10 @@ window.onload = function ()
     
     tool.onMouseDown = function(event)
 	{
+        mouseDownTemps = date.getTime();
+        
         if(boutonDePause.mouseDown(event.point)) {
-           if(paused)
-               finirPause();
-            else
-                commencerPause();
-            
+            togglePause();
             toggleMenu();
         }
         
@@ -223,27 +225,18 @@ window.onload = function ()
     
      tool.onMouseUp = function(event)
      {
+         deltaTemps = mouseDownTemps - date.getTime();
          
-        /*var hitResult = formeDomestique.trace01.intersects(formeSauvage.trace01);
 
-        if (hitResult)
-        {
-           console.log('collide');
-        }
-         */
-        var hitResult ;
+        var hitResult;
 
-        // for (var i = 0; i<groupeDomestique.length; i++)
-       // {         
-             
-           // hitResult = groupeDomestique[i].trace01.intersects(formeSauvage.trace01);
         hitResult = formeSauvage.trace01.hitTest(event.point, {
             segments: true,
             stroke: true,
             fill: true,
             tolerance: 5
         });
-         
+
          if (hitResult) {   
              if(formeGlisse != null) {
                 if(formeGlisse.estSimilaireA(formeSauvage))
@@ -256,17 +249,21 @@ window.onload = function ()
                     var index = groupeDomestique.indexOf(formeGlisse);
                     groupeDomestique.splice(index, 1);
                     formeGlisse.meurs();
+//                    groupeDomestique[index].destroy();
                 }
 
                 formeGlisse = null; 
+
                /* resetCompteARebours();
                 renouvelerFormeSauvage();*/
                  TweenVersCentreRetardee();
+
              }
          } else if(formeGlisse != null) {
             if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
             formeGlisse.mouseUp(event.point);
          }
+         formeGlisse = null;
 	}
 		
 	//paper JS event enter frame
@@ -293,38 +290,48 @@ window.onload = function ()
 //                    groupeDomestique[j].rebondit();
 //                }
 //            }
-             if( groupeDomestique[i].trace01.children.length>0)
+             if(groupeDomestique[i].trace01.children.length>0)
             {
-                if( groupeDomestique[i].trace01.children[0].fillColor.saturation == 0)
+                if(groupeDomestique[i].trace01.fillColor != null)
+                if(groupeDomestique[i].trace01.fillColor.saturation == 0)
                 {
                     groupeDomestique[i].destroy();
+//                    groupeDOmestique[i]
+                    groupeDomestique.splice(i, 1);
                 }
             }
         }
                 
-        
+        if(groupeDomestique.length == 0) {
+            //Game over
+            menu.trace.visible = true;
+            menu.trace.bringToFront();
+            texteTutoriel.visible = true;
+            texteTutoriel.content = 'Game over :(';
+            texteTutoriel.bringToFront();
+        }
 	}
     
+   function TweenVersDroite()
+    {
+        createjs.Tween.get( formeSauvage.trace01.position)
+      .to( { x: 100 }, 500, createjs.Ease.quadOut )  
+      .call( function() {
+        console.log( 'done!' );
+      } );
+       /*  createjs.Tween.get( formeSauvage.trace01.fillColor)
+      .to( { alpha: 1 }, 500, createjs.Ease.quadOut ) ;*/
+    }
     function TweenVersGauche()
     {
         createjs.Tween.get( formeSauvage.trace01.position)
-          .to( {  x:largeurCanvas+100}, 500, createjs.Ease.quadOut )  
-         
-         .call( function() {
-       
-            TweenVersCentre();
-      } )  ;
-    }
-    
-     function TweenVersCentre()
-    {
-        formeSauvage.trace01.position.x =  -100 ;
-            renouvelerFormeSauvage();
-        if(!paused)
-        pauseTime = false;
-                resetCompteARebours();
-        createjs.Tween.get( formeSauvage.trace01.position)
-          .to( {  x:  largeurCanvas/2 }, 500, createjs.Ease.quadOut ) ;
+          .to( { x: 100, y: 300 }, 1000, createjs.Ease.quadOut )  
+          .call( function() {
+            console.log( 'done!' );
+            } );
+        
+       /* createjs.Tween.get( formeSauvage.trace01.fillColor)
+            .to( { alpha: 0 }, 500, createjs.Ease.quadOut )  */ 
     }
     
      function TweenVersCentreRetardee()
@@ -355,18 +362,10 @@ function clone(obj) {
     return copy;
 }
 
-function commencerPause() {
-    pauseTime = true;
-    pauseMovement = true;
-    paused = true;
-    createjs.Ticker.paused = true; 
-}
-
-function finirPause() {
-    pauseTime = false;
-    pauseMovement = false;
-    paused = false;
-    createjs.Ticker.paused = false; 
+function togglePause() {
+    console.info("toggle pause");
+    pauseTime = !pauseTime;
+    pauseMovement = !pauseMovement;
 }
 
 function toggleMenu() {
@@ -375,4 +374,31 @@ function toggleMenu() {
     else                    menu.trace.sendToBack();
     texteTutoriel.visible = !texteTutoriel.visible;
     texteTutoriel.bringToFront();
+}
+
+function tracerLaPrairie() {
+//    var path = new Path.Circle({
+//        center: [80, 50],
+//        radius: 35
+//    });
+    var nombreDePoints = 24;
+    var path = new Path();
+    
+    for (var i = 0; i < nombreDePoints; i++) {
+        var point = new Point({
+            length: prairie.rayon,
+            angle: (360 / nombreDePoints) * i
+        });
+        path.add(point);
+    }
+    path.closed = true;
+    
+    // The path is the first child of the group:
+    path.strokeColor = 'green';
+    path.strokeWidth = 4;
+    path.smooth();
+    path.position.x = prairie.x;
+    path.position.y = prairie.y;
+    
+    return path;
 }

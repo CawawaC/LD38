@@ -160,12 +160,12 @@ class SonDeForme extends Oscillator {
     
     jouerNote(figure, position, couleur) {
         var noteRelative = notesDeFigures[figure];
-//        var octave = 3-position;  //Descendant
-        var octave = 2; //octave fix
+        var octave = 3-position;  //Descendant
+//        var octave = 2; //octave fix
 //        var octave = position +1;   //Ascendant
         
-        var noteAbsolue = noteRelative + octave*12;
-        
+        var noteAbsolue = noteRelative + octave*7 + 12;
+        console.log(figure + "-->" + noteAbsolue);
         //this.osc.setPeriodicWave(timbreDeCouleur(couleur));
         
         Timbre.appliquerTimbreDeCouleur(couleur, this);
@@ -251,11 +251,12 @@ class Timbre {
 //                      //
 
 
-var notesDeFigures = [26, 30, 33, 35];
+var notesDeFigures = [32, 34, 36];
 var timbres = [];
 var sonsDeFormes = [];
 
 var masterGain;
+var spectrogramme;
 //    sineEnvelope,
 //    context,
 //    sine,
@@ -273,8 +274,7 @@ function audioInit() {
     context = new (window.AudioContext || window.webkitAudioContext)();
 
     masterGain = context.createGain();
-    masterGain.connect(context.destination);
-    masterGain.gain.value = 0.2;
+    masterGain.gain.value = 0.5;
 
     /*kick = context.createOscillator();
     //kick.gain.value = 1;
@@ -296,12 +296,50 @@ function audioInit() {
 
     hihat = new WhiteNoise(context, masterGain);
 //            snare.osc.frequency.value = 
-    creerSonsDeFormes();
+        
+    var sommeSonsDeFormes = context.createGain();
+    
+    var filtre = context.createBiquadFilter();
+    filtre.type = "peaking";
+    filtre.frequency.value = 1300;
+    filtre.Q.value = 0.1;
+    filtre.gain.value = -6;
+    
+    var delay = context.createDelay();
+    delay.delayTime.value = .2;
+    var delayGain = context.createGain();
+    delayGain.gain.value = 0.65;
+    delay.connect(delayGain);
+    delayGain.connect(delay);
+
+    spectrogramme = context.createAnalyser();
+    
+    creerSonsDeFormes(sommeSonsDeFormes);
+    sommeSonsDeFormes.connect(delay);
+    delay.connect(filtre);
+    filtre.connect(masterGain);
+    masterGain.connect(spectrogramme);
+    masterGain.connect(context.destination);
+    
+    
+//    var delay = context.createDelay();
+//    delay.delayTime.value = 0.5;
+//
+//    var feedback = context.createGain();
+//    feedback.gain.value = 0.9;
+//
+//    delay.connect(feedback);
+//    feedback.connect(delay);
+//
+//    masterGain.connect(delay);
+////    masterGain.connect(context.destination);
+////    console.log(masterGain.channelCount);
+//    delay.connect(context.destination);
 }
 
-function creerSonsDeFormes() {
+function creerSonsDeFormes(output) {
     for (var i = 0 ; i < 3 ; ++i) {
-        sonsDeFormes.push(new SonDeForme(context, context.destination));
+        sonsDeFormes.push(new SonDeForme(context, output));
         
         var timbre = new Timbre(context);
         timbre.aleatoire();
@@ -323,14 +361,14 @@ function jouerUnSonDePattern(figure, position, couleur, oscillo = 0) {
  ...]*/
 function jouerUnSonDeForme(superTableau) {
     //Harmonique
-    /*for(var i = 0 ; i < superTableau.length ; ++i) {
-        console.info(superTableau[i][0]);
-        jouerUnSonDePattern(
-            superTableau[i][0],
-            superTableau[i][1],
-            superTableau[i][2],
-            i);
-    }*/
+//    for(var i = 0 ; i < superTableau.length ; ++i) {
+//        console.info(superTableau[i][0]);
+//        jouerUnSonDePattern(
+//            superTableau[i][0],
+//            superTableau[i][1],
+//            superTableau[i][2],
+//            i);
+//    }
     
     //Mélodique
     var i = 0;
@@ -345,7 +383,26 @@ function jouerUnSonDeForme(superTableau) {
             ++i;
             if(i >= 3) clearInterval(troisCoups);
         },
-        500);    //set interval is in ms
+        200);    //set interval is in ms
+    
+    ondulerLaPrairie();
+}
+
+function ondulerLaPrairie() {
+    var bufferLength = spectrogramme.frequencyBinCount;
+    var dataArray = new Uint8Array(bufferLength);
+    spectrogramme.getByteTimeDomainData(dataArray);
+    
+    console.info(traceDePrairie.segments[0].point.length);
+
+    for(var i = 0 ; i < traceDePrairie.segments.length ; ++i) {
+        var centre = new Point(prairie.x, prairie.y);
+        var pointRelatif = centre - traceDePrairie.segments[i].point;
+        console.info(pointRelatif);
+//        console.info(traceDePrairie.segments[i].point.x);
+//        traceDePrairie.segments[i].point.length = traceDePrairie.segments[i].point.length +1;
+    }
+    
 }
 
 
@@ -461,7 +518,7 @@ function frequencyFromNoteNumber(note) {
 }
 
 function centsOffFromPitch(frequency, note) {
-    return Math.floor( 1200 * Math.log( frequency / frequencyFromNoteNumber( note ))/Math.log(2) );
+    return Math.floor(1200 * Math.log( frequency / frequencyFromNoteNumber( note ))/Math.log(2));
 }
 
 
