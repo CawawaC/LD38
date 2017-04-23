@@ -29,7 +29,7 @@ Forme.prototype.create= function()
     this.formeAleatoire();
     
     //spawn
-    this.ramenerDansLaPrairie();
+    //this.ramenerDansLaPrairie();
 //    this.trace01.position.x=centerX;
 //    this.trace01.position.y=centerY;
     
@@ -74,7 +74,7 @@ Forme.prototype.formeAleatoire = function() {
         _figureName = this.figures[index];
         
         figure = this.creationTrace(_figureName);
-        figure.fillColor = _figureColor;
+        //figure.fillColor = _figureColor;
         figure.position.y = i*80;
         this.trace01Segments[i]=[];
       /* for(var j = 0; j<figure.segments.length; j++)
@@ -87,7 +87,15 @@ Forme.prototype.formeAleatoire = function() {
         this.paramForme[i].push(_figureColor);
         this.trace01.addChild(figure);
     }
-    this.trace01.fillColor =_figureColor;
+    this.trace01.fillColor =new Color(0.5, 0, 0.5,.5);
+   // this.trace01.fillColor.alpha =.5;
+    console.log(this.trace01.fillColor.alpha);
+}
+
+Forme.prototype.placerDansLaPrairie= function()
+{ 	
+	this.trace01.position.x= prairie.x + Math.random()*prairie.rayon*1.8- prairie.rayon*.9;
+    this.trace01.position.y=prairie.y + Math.random()*prairie.rayon*1.8- prairie.rayon*.9;
 }
 
 Forme.prototype.domestication= function()
@@ -126,8 +134,14 @@ Forme.prototype.creationTrace = function(figure)
 
 Forme.prototype.ramenerDansLaPrairie = function() {
 //    pauseTime = true;
-    this.trace01.position.x=prairie.x;
-    this.trace01.position.y=prairie.y;
+   // this.trace01.position.x=prairie.x;
+   // this.trace01.position.y=prairie.y;
+   // this.touchable = false;
+     createjs.Tween.get( this.trace01.position)
+  .to( { x: prairie.x, y: prairie.y }, 1000, createjs.Ease.quadOut )  
+  .call( function(_e) {
+        
+  } );
 //    pauseTime = false;
 }
 
@@ -146,7 +160,7 @@ Forme.prototype.domesticationDeLaSauvage = function() {
     for(var i = 0 ; i < 3 ; ++i) {
         var figure;
         figure = this.creationTrace(this.paramForme[i][0]);
-        figure.fillColor = this.paramForme[i][1];
+        //figure.fillColor = this.paramForme[i][1];
         figure.position.y = i*80;
         domestique.trace01.addChild(figure);   
     }
@@ -165,8 +179,13 @@ Forme.prototype.update = function(mousePoint)
         for(var i = 0; i<this.trace01.children.length; i++)
         {
             if(vieillesse) {
+<<<<<<< HEAD
                 this.trace01.children[i].fillColor.saturation -= 0.01;
                 if(this.trace01.children[i].fillColor.saturation<=0) this.trace01.children[i].fillColor.saturation=0;
+=======
+                this.trace01/*.children[i]*/.fillColor.saturation-=0.01;
+                if(this.trace01/*.children[i]*/.fillColor.saturation<=0) this.trace01/*.children[i]*/.fillColor.saturation=0;
+>>>>>>> nat
             }
             //console.log(this.trace01.children[i].fillColor.red);
         }
@@ -195,13 +214,14 @@ Forme.prototype.update = function(mousePoint)
             var newY = this.trace01.position.y + this.vitesseY;
             var distanceAuCentre = Math.sqrt(Math.pow(newX-prairie.x, 2) + Math.pow(newY-prairie.y, 2));
 
-            if(distanceAuCentre < prairie.rayon) {
-                this.trace01.position.x = newX;
-                this.trace01.position.y = newY;
-            } else {
-                this.trace01.vitesseX * -1;
-                this.trace01.vitesseY * -1;
+            if(distanceAuCentre >= prairie.rayon) {
+                this.vitesseX *= -1;
+                this.vitesseY *= -1;
+                newX = this.trace01.position.x + this.vitesseX;
+                newY = this.trace01.position.y + this.vitesseY;
             }
+            this.trace01.position.x = newX;
+            this.trace01.position.y = newY;
         }
     }
 }
@@ -211,11 +231,11 @@ Forme.prototype.vitesseAleatoire = function() {
     this.vitesseY = (Math.random()*2-1)*0.6;
 }
 
-Forme.prototype.rebondit = function() {
-    var tempX = this.vitesseX;
-    this.vitesseX = this.vitesseY;
-    this.vitesseY = tempX;
-}
+//Forme.prototype.rebondit = function() {
+//    var tempX = this.vitesseX;
+//    this.vitesseX = this.vitesseY;
+//    this.vitesseY = tempX;
+//}
 
 Forme.prototype.mouseUp = function(mousePoint)
 {	
@@ -246,6 +266,15 @@ Forme.prototype.mouseDown = function(mousePoint)
         }*/
     }
     return hitResult;
+}
+
+Forme.prototype.TweenVersCentre = function()
+{
+    createjs.Tween.get( this.trace01.position)
+  .to( { x: 100, y: 300 }, 1000, createjs.Ease.quadOut )  
+  .call( function() {
+    console.log( 'done!' );
+  } );
 }
 
 Forme.prototype.destroy = function()
