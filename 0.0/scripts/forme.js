@@ -13,6 +13,7 @@ function Forme()
     this.colors = ['#140245', '#784537', '#478952'];
     this.figures = ['rond', 'carre', 'triangle'];
     this.paramForme = [];
+    this.vieillissement;    //Interval
 }
 
 Forme.prototype.create= function()
@@ -57,6 +58,12 @@ Forme.prototype.creerFormeDomestique = function() {
     this.touchable=true;
     this.glisse = false;
     this.domestication();
+    
+    this.incrementDeVieillessement = Math.random()/100;
+    console.info(this.incrementDeVieillessement);
+    
+    if(vieillesse)
+        this.vieillissement = setInterval(desaturation, 100, this.trace01/*.children[i]*/.fillColor, this.incrementDeVieillessement);
 }
 
 Forme.prototype.formeAleatoire = function() {
@@ -66,6 +73,8 @@ Forme.prototype.formeAleatoire = function() {
     this.indexDeForme = [];
     this.paramForme = [];
     this.trace01.removeChildren();
+    
+    var figures = [];
     
     for( var i = 0; i <3; i++)
     {
@@ -85,9 +94,19 @@ Forme.prototype.formeAleatoire = function() {
         this.paramForme[i]= [];
         this.paramForme[i].push(_figureName);
         this.paramForme[i].push(_figureColor);
-        this.trace01.addChild(figure);
+        
+        figures.push(figure);
+//        figureUnifiee.unite(figure);
+        
+//        this.trace01.addChild(figure);
     }
-    this.trace01.fillColor =new Color(0.5, 0, 0.5,.5);
+    var figureUnifiee;
+    figureUnifiee = figures[0].unite(figures[1]);
+    figureUnifiee = figureUnifiee.unite(figures[2]);
+    
+    this.trace01.addChild(figureUnifiee);
+
+    this.trace01.fillColor = new Color(0.5, 0, 0.5,.5);
    // this.trace01.fillColor.alpha =.5;
     console.log(this.trace01.fillColor.alpha);
 }
@@ -173,20 +192,18 @@ Forme.prototype.domesticationDeLaSauvage = function() {
     return domestique;
 }
 
+function desaturation(couleur, incrementDeVieillessement) {
+    couleur.saturation-=incrementDeVieillessement*vieillissementRapide;
+    if(couleur.saturation < 0)
+        couleur.saturation = 0;
+}
+
 Forme.prototype.update = function(mousePoint)
 {	
     if(!pauseMovement)
         for(var i = 0; i<this.trace01.children.length; i++)
         {
-            if(vieillesse) {
-<<<<<<< HEAD
-                this.trace01.children[i].fillColor.saturation -= 0.01;
-                if(this.trace01.children[i].fillColor.saturation<=0) this.trace01.children[i].fillColor.saturation=0;
-=======
-                this.trace01/*.children[i]*/.fillColor.saturation-=0.01;
-                if(this.trace01/*.children[i]*/.fillColor.saturation<=0) this.trace01/*.children[i]*/.fillColor.saturation=0;
->>>>>>> nat
-            }
+            
             //console.log(this.trace01.children[i].fillColor.red);
         }
     
@@ -282,6 +299,7 @@ Forme.prototype.destroy = function()
     this.trace01.removeChildren();
     this.trace01.remove();
     this.touchable = false;
+    clearInterval(this.vieillissement);
 }
 
 

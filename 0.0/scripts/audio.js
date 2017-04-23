@@ -256,6 +256,7 @@ var timbres = [];
 var sonsDeFormes = [];
 
 var masterGain;
+var spectrogramme;
 //    sineEnvelope,
 //    context,
 //    sine,
@@ -273,7 +274,7 @@ function audioInit() {
     context = new (window.AudioContext || window.webkitAudioContext)();
 
     masterGain = context.createGain();
-    masterGain.gain.value = 0.1;
+    masterGain.gain.value = 0.5;
 
     /*kick = context.createOscillator();
     //kick.gain.value = 1;
@@ -299,9 +300,10 @@ function audioInit() {
     var sommeSonsDeFormes = context.createGain();
     
     var filtre = context.createBiquadFilter();
-    filtre.type = "lowpass";
-    filtre.frequency.value = 1200;
-    filtre.Q.value = 0;
+    filtre.type = "peaking";
+    filtre.frequency.value = 1300;
+    filtre.Q.value = 0.1;
+    filtre.gain.value = -6;
     
     var delay = context.createDelay();
     delay.delayTime.value = .2;
@@ -310,10 +312,13 @@ function audioInit() {
     delay.connect(delayGain);
     delayGain.connect(delay);
 
+    spectrogramme = context.createAnalyser();
+    
     creerSonsDeFormes(sommeSonsDeFormes);
     sommeSonsDeFormes.connect(delay);
     delay.connect(filtre);
     filtre.connect(masterGain);
+    masterGain.connect(spectrogramme);
     masterGain.connect(context.destination);
     
     
@@ -379,6 +384,25 @@ function jouerUnSonDeForme(superTableau) {
             if(i >= 3) clearInterval(troisCoups);
         },
         200);    //set interval is in ms
+    
+    ondulerLaPrairie();
+}
+
+function ondulerLaPrairie() {
+    var bufferLength = spectrogramme.frequencyBinCount;
+    var dataArray = new Uint8Array(bufferLength);
+    spectrogramme.getByteTimeDomainData(dataArray);
+    
+    console.info(traceDePrairie.segments[0].point.length);
+
+    for(var i = 0 ; i < traceDePrairie.segments.length ; ++i) {
+        var centre = new Point(prairie.x, prairie.y);
+        var pointRelatif = centre - traceDePrairie.segments[i].point;
+        console.info(pointRelatif);
+//        console.info(traceDePrairie.segments[i].point.x);
+//        traceDePrairie.segments[i].point.length = traceDePrairie.segments[i].point.length +1;
+    }
+    
 }
 
 

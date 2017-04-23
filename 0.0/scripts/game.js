@@ -1,7 +1,8 @@
 var /*pause = false, */pauseTime = false, pauseMovement = false;
 var nombreDeFormesDomestiquesInitiales = 5;
-var vieillesse = false;
+var vieillesse = true, vieillissementRapide = 10;
 var prairie;
+var traceDePrairie;
 var date;
 
 var textCompteARebours;
@@ -122,6 +123,8 @@ window.onload = function ()
     texteTutoriel.fillColor = 'red';
     texteTutoriel.visible = false;
     texteTutoriel.content  = "Gloubi blouga";
+    
+    traceDePrairie = tracerLaPrairie();
     
     function renouvelerFormeSauvage() {
         formeSauvage.formeAleatoire();
@@ -246,6 +249,7 @@ window.onload = function ()
                     var index = groupeDomestique.indexOf(formeGlisse);
                     groupeDomestique.splice(index, 1);
                     formeGlisse.meurs();
+//                    groupeDomestique[index].destroy();
                 }
 
                 formeGlisse = null; 
@@ -283,16 +287,26 @@ window.onload = function ()
 //                    groupeDomestique[j].rebondit();
 //                }
 //            }
-             if( groupeDomestique[i].trace01.children.length>0)
+             if(groupeDomestique[i].trace01.children.length>0)
             {
-                if( groupeDomestique[i].trace01.children[0].fillColor.saturation == 0)
+                if(groupeDomestique[i].trace01.fillColor != null)
+                if(groupeDomestique[i].trace01.fillColor.saturation == 0)
                 {
                     groupeDomestique[i].destroy();
+//                    groupeDOmestique[i]
+                    groupeDomestique.splice(i, 1);
                 }
             }
         }
                 
-        
+        if(groupeDomestique.length == 0) {
+            //Game over
+            menu.trace.visible = true;
+            menu.trace.bringToFront();
+            texteTutoriel.visible = true;
+            texteTutoriel.content = 'Game over :(';
+            texteTutoriel.bringToFront();
+        }
 	}
     
    function TweenVersDroite()
@@ -344,4 +358,31 @@ function toggleMenu() {
     else                    menu.trace.sendToBack();
     texteTutoriel.visible = !texteTutoriel.visible;
     texteTutoriel.bringToFront();
+}
+
+function tracerLaPrairie() {
+//    var path = new Path.Circle({
+//        center: [80, 50],
+//        radius: 35
+//    });
+    var nombreDePoints = 24;
+    var path = new Path();
+    
+    for (var i = 0; i < nombreDePoints; i++) {
+        var point = new Point({
+            length: prairie.rayon,
+            angle: (360 / nombreDePoints) * i
+        });
+        path.add(point);
+    }
+    path.closed = true;
+    
+    // The path is the first child of the group:
+    path.strokeColor = 'green';
+    path.strokeWidth = 4;
+    path.smooth();
+    path.position.x = prairie.x;
+    path.position.y = prairie.y;
+    
+    return path;
 }
