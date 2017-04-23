@@ -14,9 +14,10 @@ function Forme()
     this.figures = ['rond', 'carre', 'triangle'];
     this.formesComposantes = [];
     this.vieillissement;    //Interval
+    this.incrementDeVieillessement = {valeur:0};    //Gros fake. Modifier la variable valeur !
 }
 
-Forme.prototype.create= function()
+Forme.prototype.create= function(couleur = -1)
 { 
 	var rect = new Rectangle([0, 0], [25, 25]);
 	rect.center = this.mousePoint;
@@ -27,8 +28,7 @@ Forme.prototype.create= function()
     var _figureName;
     var _figureColor;
     
-    this.formeAleatoire();
-   
+    this.formeAleatoire(couleur);
     
     //spawn
     //this.ramenerDansLaPrairie();
@@ -59,23 +59,35 @@ Forme.prototype.estSimilaireA = function(cousine) {
     return scoreLocal;
 }
 
-Forme.prototype.creerFormeDomestique = function() {
-    this.create();
+Forme.prototype.creerFormeDomestique = function(couleur = -1, creerTimer = true) {
+    this.create(couleur);
     this.touchable=true;
     this.glisse = false;
     this.domestication();
     
-    this.incrementDeVieillessement = Math.random()/100+0.001;
-    console.info(this.incrementDeVieillessement);
+    this.incrementDeVieillessement.valeur = Math.random()/100+0.001;
+//    console.info(this.incrementDeVieillessement.valeur);
     
+
     console.log("programmation du vieillissement");
     if(vieillesse)
         this.vieillissement = setInterval(desaturation, 100, this.trace01.children[1].fillColor, this.incrementDeVieillessement);
+
+    
+    return this.indexDeCouleur;
+
 }
 
-Forme.prototype.formeAleatoire = function() {
-    this.indexDeCouleur = Math.floor(Math.random()*this.colors.length);
-    _figureColor =this.colors[this.indexDeCouleur];
+Forme.prototype.formeAleatoire = function(couleur = -1) {
+    if(couleur >= 0 && couleur < 3) {
+//        console.info()
+        _figureColor = colors[couleur];
+        this.indexDeCouleur = couleur;
+//        console.info(this.fillColor);
+    } else {
+        this.indexDeCouleur = Math.floor(Math.random()*this.colors.length);
+        _figureColor =this.colors[this.indexDeCouleur];
+    }
     
     this.indexDeForme = [];
     this.formesComposantes = [];
@@ -129,6 +141,7 @@ Forme.prototype.formeAleatoire = function() {
 //    figuresTemp[0].remove();
 //    figuresTemp[1].remove();
 //    figuresTemp[2].remove();
+
     this.trace01.addChild(this.creationPath(45,4,0,220));
    this.trace01.addChild(figureUnifiee);
 
@@ -136,6 +149,7 @@ Forme.prototype.formeAleatoire = function() {
     this.trace01.children[1].fillColor =_figureColor;
      this.trace01.children[0].fillColor = "#000000";
     this.trace01.children[0].fillColor.alpha =.3;
+
    // this.trace01.fillColor.alpha =.5;
 }
 
@@ -200,7 +214,7 @@ Forme.prototype.estDansLaPrairie = function() {
 
 Forme.prototype.domesticationDeLaSauvage = function() {
     var domestique = new Forme();
-    domestique.creerFormeDomestique();
+    domestique.creerFormeDomestique(-1, false);
     
     //Copier caractéristiques
     domestique.formesComposantes = this.formesComposantes;
@@ -208,6 +222,14 @@ Forme.prototype.domesticationDeLaSauvage = function() {
     
     domestique.trace01.remove();
     domestique.trace01 = this.trace01;
+    
+    if(vieillesse)
+        domestique.vieillissement = setInterval(
+            desaturation, 
+            100, 
+            domestique.trace01.fillColor, 
+            domestique.incrementDeVieillessement);
+    
 //    domestique.trace01 = this.trace01;
     
 //    for(var i = 0 ; i < 3 ; ++i) {
@@ -228,11 +250,21 @@ Forme.prototype.domesticationDeLaSauvage = function() {
     return domestique;
 }
 
-function desaturation(couleur, incrementDeVieillessement) {
+function desaturation(couleur, increment) {
 //    console.log(couleur);
-    couleur.saturation-=incrementDeVieillessement*vieillissementRapide;
-    if(couleur.saturation < 0)
-        couleur.saturation = 0;
+//    if(!paused) {
+//        couleur.saturation-=incrementDeVieillessement*vieillissementRapide;
+//        if(couleur.saturation < 0)
+//            couleur.saturation = 0;
+    if(!paused) {
+//        if(vieillissementInverse)
+//            couleur.alpha += incrementDeVieillessement*vieillissementRapide;
+//        else
+            couleur.alpha -= increment.valeur*vieillissementRapide;
+        
+        if(couleur.alpha < 0)
+            couleur.alpha = 0;
+    }
 }
 
 Forme.prototype.update = function(mousePoint)
@@ -285,22 +317,30 @@ Forme.prototype.vitesseAleatoire = function() {
 
 Forme.prototype.mouseUp = function(mousePoint)
 {	
-    if(this.glisse)
-   { this.trace01.scale(1/(grandeEchelle));
-
-    this.glisse=false;
-   }
+    if(this.glisse) { 
+        this.trace01.scale(1/(grandeEchelle));
+        this.glisse=false;
+    }
+    
+    //Inversion du vieillissement (à nouveau normal)
+//    this.vieillissementInverse = false;
+    this.incrementDeVieillessement.valeur *= -1;
 }
 
 
 Forme.prototype.mouseDown = function(mousePoint)
 {	
     var hitResult = this.trace01.hitTest(mousePoint, {
-	segments: true,
-	stroke: true,
-	fill: true,
-	tolerance: 5
+        segments: true,
+        stroke: true,
+        fill: true,
+        tolerance: 5
     });
+    
+    //Inversion du vieillissement (rajeunit pendent qu'elle est saisie)
+//    this.vieillissementInverse = true;
+    this.incrementDeVieillessement.valeur *= -1;
+
 	
 	if (hitResult)
     {
@@ -323,15 +363,16 @@ Forme.prototype.creationTraceTete = function(figure)
     switch(figure)
     {
             case"rond":            
-			path=this.creationPath(50,12,0,0);
-			path = path.subtract(this.creationPath(30,3,0,-6,270));
-			path = path.unite(this.creationPath(15,3,0,-3,270));
-			
-            break;
+			path=this.creationPath(45,12,0,0);
+			path = path.unite(this.creationPath(25,12,0,-40));
+			path = path.subtract(this.creationPath(25,3,0,-6,270));
+			path = path.unite(this.creationPath(10,3,0,-3,270));
+            break;	
             case"carre":
-            path=this.creationPath(50,4,0,0);
-			 path = path.subtract(this.creationPath(22,12,0,0));
-			path = path.unite(this.creationPath(12,12,0,0));
+            path=this.creationPath(48,4,0,0);
+			path = path.unite(this.creationPath(25,3,0,-40,270));
+			 path = path.subtract(this.creationPath(20,12,0,0));
+			path = path.unite(this.creationPath(10,12,0,0));
             break;
         case "triangle":
           path=this.creationPath(55,3,0,0,270);
@@ -353,17 +394,20 @@ Forme.prototype.creationTraceCorps = function(figure)
     {
         case"rond":            
 			path=this.creationPath(50,12,0,0);
-			path = path.unite(this.creationPath(20,4,-90,0));
-			path = path.unite(this.creationPath(20,4,90,0));
+			path = path.unite(this.creationPath(15,4,-70,0));
+			path = path.unite(this.creationPath(15,4,70,0));	
+			path = path.subtract(this.creationPath(17,12,0,0));
             break;
         case"carre":
-            path=this.creationPath(50,4,0,0);
-			path = path.unite(this.creationPath(22,3,-52,20,270));
-			path = path.unite(this.creationPath(22,3,52,20,270));
+            path=this.creationPath(55,4,0,0);	
+			path = path.unite(this.creationPath(15,3,-50,20,15));
+			path = path.unite(this.creationPath(15,3,50,20,45));
+			path = path.subtract(this.creationPath(7,4,0,0));
             break;
         case "triangle":
-          path=this.creationPath(55,3,0,0,270);
-		  path = path.unite(this.creationPath(20,12,0,-22));
+          path=this.creationPath(60,3,0,0,270);
+		  path = path.unite(this.creationPath(20,12,0,-27));
+		  path = path.subtract(this.creationPath(12,3,0,8,270));
             break;
     }    
 	return path;
@@ -377,18 +421,19 @@ Forme.prototype.creationTracePieds = function(figure)
     switch(figure)
     {
             case"rond":            
-			path=this.creationPath(50,12);
-			path = path.unite(this.creationPath(25,3,-40,20,270));
-			path = path.unite(this.creationPath(25,3,40,20,270));
+			path=this.creationPath(35,12);
+			path = path.unite(this.creationPath(15,12,0,55));
             break;
             case"carre":
             path=this.creationPath(50,4,0,0);
+			path = path.subtract(this.creationPath(15,4,0,0));
 			path = path.unite(this.creationPath(25,4,0,45));
+			
             break;
         case "triangle":
-			path=this.creationPath(55,3,0,0,270);
-			path =  path.unite(this.creationPath(10,12,-46,40));
-			path = path.unite(this.creationPath(10,12,46,40));
+			path=this.creationPath(50,3,0,0,270);
+			path =  path.unite(this.creationPath(20,3,0,45,270));
+			path = path.unite(this.creationPath(10,3,0,70,270));
             break;
     }   
 	path.position.y=80;		
