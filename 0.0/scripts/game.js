@@ -117,9 +117,9 @@ window.onload = function ()
     }
     
     boutonDePause = new Bouton(320, 30, 20, 20);
-    menu = new Bouton(50, 50, 300, 500);
+    menu = new Bouton(0, 0, 250, 500);
     menu.trace.visible = false;
-    menu.traceDeRectangle(200, 400, 300, 500);
+    menu.traceDeRectangle(175, 300, 275, 500);
     
     var myPath = new Path();
 myPath.strokeColor = 'white';
@@ -129,14 +129,16 @@ myPath.add(new Point(325, 300));
     
     texteTutoriel = new paper.PointText(new paper.Point(80, 180));
 //    texteTutoriel = new paper.PointText();
-    texteTutoriel.fillColor = 'red';
+    texteTutoriel.fillColor = '#015A68';
     texteTutoriel.visible = false;
+    texteTutoriel.fontSize = 15;
+    texteTutoriel.position.x =180;
 
 //    console.log(texteTutoriel.bounds);
 //    texteTutoriel.bounds = new paper. Rectangle(80, 180, 100, 200);
 //    console.log(texteTutoriel.bounds);
-
-    texteTutoriel.content  = "Welcome to Forme Sauvage (in French: \"Wild \nForm\"). You need to capture the wild forms \nappearing in the top half of the screen, using \na matching form among the domesticated ones you own (bottom half). Forms match when they share an identically-colored shape at the same position.";
+texteTutoriel.justification = 'center';
+    texteTutoriel.content  = "Forme Sauvage\n Wild Form\n\n You need to capture the wild forms \nappearing in the top half of the screen,\nusing a matching form among\nthe domesticated ones you own\n(bottom half).\nForms match when they share\nan identically-colored shape\nat the same position.";
     menu.trace.addChild(texteTutoriel);
     
     
