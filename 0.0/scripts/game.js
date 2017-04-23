@@ -188,11 +188,11 @@ window.onload = function ()
     for (var i = 0; i < nombreDeFormesDomestiquesInitiales; i++)
     {
         var formeDomestique = new Forme();
-        formeDomestique.creerFormeDomestique();
+        formeDomestique.creerFormeDomestique(i);
         formeDomestique.placerDansLaPrairie();
         groupeDomestique.push(formeDomestique);
     }
-    
+        
 	// paper JS event mouse
 	tool.onMouseMove = function(event)
 	{
