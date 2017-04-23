@@ -68,11 +68,14 @@ Forme.prototype.creerFormeDomestique = function(couleur = -1, creerTimer = true)
     this.incrementDeVieillessement.valeur = Math.random()/100+0.001;
 //    console.info(this.incrementDeVieillessement.valeur);
     
-//    console.log("programmation du vieillissement");
-    if(vieillesse && creerTimer)
-        this.vieillissement = setInterval(desaturation, 100, this.trace01.fillColor, this.incrementDeVieillessement);
+
+    console.log("programmation du vieillissement");
+    if(vieillesse)
+        this.vieillissement = setInterval(desaturation, 100, this.trace01.children[1].fillColor, this.incrementDeVieillessement);
+
     
     return this.indexDeCouleur;
+
 }
 
 Forme.prototype.formeAleatoire = function(couleur = -1) {
@@ -88,10 +91,10 @@ Forme.prototype.formeAleatoire = function(couleur = -1) {
     
     this.indexDeForme = [];
     this.formesComposantes = [];
-    this.trace01 = new Path();
+    this.trace01 = new Group();
     
     var figuresTemp = [];
-//    var figureUnifiee;
+    var figureUnifiee = new Path();
     
     for( var i = 0; i <3; i++)
     {
@@ -108,10 +111,10 @@ Forme.prototype.formeAleatoire = function(couleur = -1) {
                 figure =this.creationTraceTete(_figureName);
                 break;
                   case 1:
-                figure =this.creationTraceCorps(_figureName);
+                figure =this.creationTraceTete(_figureName);
                 break;
                   case 2:
-                figure =this.creationTracePieds(_figureName);
+                figure =this.creationTraceTete(_figureName);
                 break;
         }
 //        figure.fillColor = _figureColor;
@@ -127,7 +130,7 @@ Forme.prototype.formeAleatoire = function(couleur = -1) {
 //        figuresTemp.push(figure);
         
 //        figureUnifiee.unite(figure);
-        this.trace01 = this.trace01.unite(figure);
+        figureUnifiee = figureUnifiee.unite(figure);
         
         figure.remove();
     }
@@ -138,11 +141,15 @@ Forme.prototype.formeAleatoire = function(couleur = -1) {
 //    figuresTemp[0].remove();
 //    figuresTemp[1].remove();
 //    figuresTemp[2].remove();
-    
-//    this.trace01.addChild(figureUnifiee);
-    this.trace01.scale(.7);
-    
-    this.trace01.fillColor = _figureColor;
+
+    this.trace01.addChild(this.creationPath(45,4,0,220));
+   this.trace01.addChild(figureUnifiee);
+
+ this.trace01.scale(.7);
+    this.trace01.children[1].fillColor =_figureColor;
+     this.trace01.children[0].fillColor = "#000000";
+    this.trace01.children[0].fillColor.alpha =.3;
+
    // this.trace01.fillColor.alpha =.5;
 }
 

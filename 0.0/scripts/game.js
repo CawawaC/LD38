@@ -1,6 +1,6 @@
 var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false;
 var nombreDeFormesDomestiquesInitiales = 5;
-var vieillesse = true, vieillissementRapide = 1;
+var vieillesse = true, vieillissementRapide = 0;
 var prairie;
 //var traceDePrairie;
 var date;
@@ -321,8 +321,13 @@ window.onload = function ()
 //            }
              if(groupeDomestique[i].trace01 != null)
             {
-                if(groupeDomestique[i].trace01.fillColor != null)
-                if(groupeDomestique[i].trace01.fillColor.alpha == 0)
+//<<<<<<< HEAD
+                if(groupeDomestique[i].trace01.children[1].fillColor != null)
+                if(groupeDomestique[i].trace01.children[1].fillColor.alpha == 0)
+//=======
+//                if(groupeDomestique[i].trace01.children[1].fillColor != null)
+//                if(groupeDomestique[i].trace01.children[1].fillColor.saturation == 0)
+//>>>>>>> graph
                 {
                     groupeDomestique[i].destroy();
 //                    groupeDOmestique[i]
