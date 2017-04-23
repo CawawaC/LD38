@@ -269,6 +269,8 @@ window.onload = function ()
                     if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
                     formeGlisse.mouseUp(event.point);
                     
+                    formeGlisse.trace01.children[1].fillColor.alpha = 1;
+                    
                     score += scoreLocal;
                     texteScore.content = "Score: "+score;
                     console.log(score);
@@ -311,23 +313,10 @@ window.onload = function ()
          for (var i = 0; i < groupeDomestique.length; i++)
         {
             groupeDomestique[i].update(mousePoint);
-//            for(var j = 0 ; j < groupeDomestique.length ; j++)
-//            {
-//                if(groupeDomestique[i].trace01.intersects(groupeDomestique[j].trace01))
-//                {
-//                    groupeDomestique[i].rebondit();
-//                    groupeDomestique[j].rebondit();
-//                }
-//            }
              if(groupeDomestique[i].trace01 != null)
             {
-//<<<<<<< HEAD
                 if(groupeDomestique[i].trace01.children[1].fillColor != null)
                 if(groupeDomestique[i].trace01.children[1].fillColor.alpha == 0)
-//=======
-//                if(groupeDomestique[i].trace01.children[1].fillColor != null)
-//                if(groupeDomestique[i].trace01.children[1].fillColor.saturation == 0)
-//>>>>>>> graph
                 {
                     groupeDomestique[i].destroy();
 //                    groupeDOmestique[i]
