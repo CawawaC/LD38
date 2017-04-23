@@ -106,7 +106,6 @@ Forme.prototype.formeAleatoire = function() {
     
     this.trace01.addChild(figureUnifiee);
 
-
     this.trace01.fillColor =_figureColor;
    // this.trace01.fillColor.alpha =.5;
 }
@@ -205,6 +204,13 @@ Forme.prototype.update = function(mousePoint)
     /*if(!pauseMovement)
         for(var i = 0; i<this.trace01.children.length; i++)
         {
+<<<<<<< HEAD
+=======
+            if(vieillesse) {
+                this.trace01.children[i].fillColor.saturation-=0.01;
+                if(this.trace01.children[i].fillColor.saturation<=0) this.trace01.children[i].fillColor.saturation=0;
+            }
+>>>>>>> nat
             //console.log(this.trace01.children[i].fillColor.red);
         }*/
     
