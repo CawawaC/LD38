@@ -1,4 +1,4 @@
-var /*pause = false, */pauseTime = false, pauseMovement = false;
+var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false;
 var nombreDeFormesDomestiquesInitiales = 5;
 var vieillesse = true, vieillissementRapide = 10;
 var prairie;
@@ -128,10 +128,10 @@ window.onload = function ()
     
     function renouvelerFormeSauvage() {
         formeSauvage.formeAleatoire();
-        formeSauvage.trace01.position.x =300;
+       // formeSauvage.trace01.position.x =largeurCanvas/2;
         formeSauvage.trace01.position.y =300;
         
-        TweenVersGauche();
+        //TweenVersGauche();
     }
     
     function changeCompteARebours() { 
@@ -141,9 +141,10 @@ window.onload = function ()
             textCompteARebours.content = Math.floor(compte/1000) + ":" + Math.floor(compte%1000)/100;
             if(compte == 0)
             {
-                renouvelerFormeSauvage();
-                resetCompteARebours();
-                  TweenVersDroite();
+              pauseTime = true;
+                /* renouvelerFormeSauvage();
+                resetCompteARebours();*/
+                TweenVersGauche();
             }
         }
     }
@@ -165,7 +166,7 @@ window.onload = function ()
     formeSauvage = new Forme();
 	formeSauvage.create();
     formeSauvage.touchable=false;
-    formeSauvage.trace01.position.x =300;
+    formeSauvage.trace01.position.x =largeurCanvas/2;
     formeSauvage.trace01.position.y =300;
     
     var groupeDomestique = [];
@@ -189,7 +190,11 @@ window.onload = function ()
         mouseDownTemps = date.getTime();
         
         if(boutonDePause.mouseDown(event.point)) {
-            togglePause();
+           if(paused)
+               finirPause();
+            else
+                commencerPause();
+            
             toggleMenu();
         }
         
@@ -253,8 +258,9 @@ window.onload = function ()
                 }
 
                 formeGlisse = null; 
-                resetCompteARebours();
-                renouvelerFormeSauvage();
+               /* resetCompteARebours();
+                renouvelerFormeSauvage();*/
+                 TweenVersCentreRetardee();
              }
          } else if(formeGlisse != null) {
             if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
@@ -309,26 +315,39 @@ window.onload = function ()
         }
 	}
     
-   function TweenVersDroite()
-    {
-        createjs.Tween.get( formeSauvage.trace01.position)
-      .to( { x: 100 }, 500, createjs.Ease.quadOut )  
-      .call( function() {
-        console.log( 'done!' );
-      } );
-       /*  createjs.Tween.get( formeSauvage.trace01.fillColor)
-      .to( { alpha: 1 }, 500, createjs.Ease.quadOut ) ;*/
-    }
     function TweenVersGauche()
     {
         createjs.Tween.get( formeSauvage.trace01.position)
-          .to( { x: 100, y: 300 }, 1000, createjs.Ease.quadOut )  
-          .call( function() {
-            console.log( 'done!' );
-            } );
+          .to( {  x:largeurCanvas+100}, 500, createjs.Ease.quadOut )  
+         
+         .call( function() {
+       
+            TweenVersCentre();
+      } )  ;
+    }
+    
+     function TweenVersCentre()
+    {
+        formeSauvage.trace01.position.x =  -100 ;
+            renouvelerFormeSauvage();
+        if(!paused)
+        pauseTime = false;
+                resetCompteARebours();
+        createjs.Tween.get( formeSauvage.trace01.position)
+          .to( {  x:  largeurCanvas/2 }, 500, createjs.Ease.quadOut ) ;
+    }
+    
+     function TweenVersCentreRetardee()
+    {
         
-       /* createjs.Tween.get( formeSauvage.trace01.fillColor)
-            .to( { alpha: 0 }, 500, createjs.Ease.quadOut )  */ 
+            renouvelerFormeSauvage();
+        formeSauvage.trace01.position.x =  -100 ;
+        if(!paused)
+        pauseTime = false;
+                resetCompteARebours();
+        createjs.Tween.get( formeSauvage.trace01.position)
+        .wait (500)
+          .to( {  x:  largeurCanvas/2 }, 500, createjs.Ease.quadOut ) ;
     }
     
     audioInit();
@@ -346,10 +365,18 @@ function clone(obj) {
     return copy;
 }
 
-function togglePause() {
-    console.info("toggle pause");
-    pauseTime = !pauseTime;
-    pauseMovement = !pauseMovement;
+function commencerPause() {
+    pauseTime = true;
+    pauseMovement = true;
+    paused = true;
+    createjs.Ticker.paused = true; 
+}
+
+function finirPause() {
+    pauseTime = false;
+    pauseMovement = false;
+    paused = false;
+    createjs.Ticker.paused = false; 
 }
 
 function toggleMenu() {
