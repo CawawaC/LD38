@@ -215,7 +215,7 @@ texteTutoriel.justification = 'center';
     
     tool.onMouseDown = function(event)
 	{
-        mouseDownTemps = date.getTime();
+//        mouseDownTemps = date.getTime();
         
         if(boutonDePause.mouseDown(event.point)) {
            if(paused)
@@ -259,7 +259,7 @@ texteTutoriel.justification = 'center';
     
      tool.onMouseUp = function(event)
      {
-         deltaTemps = mouseDownTemps - date.getTime();
+//         deltaTemps = mouseDownTemps - date.getTime();
          
 
         var hitResult;

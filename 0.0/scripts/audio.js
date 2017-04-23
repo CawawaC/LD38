@@ -18,7 +18,7 @@ class Oscillator {
         this.envelope.connect(output);
         this.envelope.gain.value = 0;
 
-        this.envelopeAD = [1, 0.2, 0, 0.5];
+        this.envelopeAD = [1, 0.1, 0, 0.5];
 
         this.osc.connect(this.envelope);
     }
@@ -33,7 +33,7 @@ class Oscillator {
     }
 
     playNote(note) {
-//        console.info("je joue une note : " + note);
+        console.info("je joue une note : " + note);
         this.setNote(note);
         this.linearAmplitudeBurst(context.currentTime, this.envelopeAD[0], this.envelopeAD[1], this.envelopeAD[2], this.envelopeAD[3]);
     }
