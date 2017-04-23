@@ -1,5 +1,5 @@
 
-var petiteEchelle = 0.2, grandeEchelle = 2;
+var petiteEchelle = 0.25, grandeEchelle = 4;
 
 function Forme()
 { 
@@ -75,7 +75,7 @@ Forme.prototype.formeAleatoire = function() {
         _figureName = this.figures[index];
         
         figure = this.creationTrace(_figureName);
-        //figure.fillColor = _figureColor;
+        figure.fillColor = _figureColor;
         figure.position.y = i*80;
         this.trace01Segments[i]=[];
       /* for(var j = 0; j<figure.segments.length; j++)
@@ -88,9 +88,8 @@ Forme.prototype.formeAleatoire = function() {
         this.paramForme[i].push(_figureColor);
         this.trace01.addChild(figure);
     }
-    this.trace01.fillColor =new Color(0.5, 0, 0.5,.5);
+    this.trace01.fillColor =_figureColor;
    // this.trace01.fillColor.alpha =.5;
-    console.log(this.trace01.fillColor.alpha);
 }
 
 Forme.prototype.placerDansLaPrairie= function()
@@ -101,7 +100,7 @@ Forme.prototype.placerDansLaPrairie= function()
 
 Forme.prototype.domestication= function()
 { 	
-	this.trace01.scale(petiteEchelle);
+	this.trace01.scale(1/grandeEchelle);
 }
 
 Forme.prototype.creationTrace = function(figure)
@@ -139,10 +138,11 @@ Forme.prototype.ramenerDansLaPrairie = function() {
    // this.trace01.position.y=prairie.y;
    // this.touchable = false;
      createjs.Tween.get( this.trace01.position)
-  .to( { x: prairie.x, y: prairie.y }, 1000, createjs.Ease.quadOut )  
-  .call( function(_e) {
-        
-  } );
+  .to( { x: prairie.x, y: prairie.y }, 1000, createjs.Ease.quadOut ) ;
+     createjs.Tween.get( this.trace01)
+  .to( {scal:1/grandeEchelle }, 1000, createjs.Ease.quadOut ) ;
+    
+    
 //    pauseTime = false;
 }
 
@@ -161,12 +161,13 @@ Forme.prototype.domesticationDeLaSauvage = function() {
     for(var i = 0 ; i < 3 ; ++i) {
         var figure;
         figure = this.creationTrace(this.paramForme[i][0]);
-        //figure.fillColor = this.paramForme[i][1];
+        figure.fillColor = this.paramForme[i][1];
         figure.position.y = i*80;
         domestique.trace01.addChild(figure);   
     }
     
     domestique.domestication();
+
     domestique.ramenerDansLaPrairie();
 //    domestique.trace01.position.x=centerX;
 //    domestique.trace01.position.y=centerY;
@@ -180,8 +181,8 @@ Forme.prototype.update = function(mousePoint)
         for(var i = 0; i<this.trace01.children.length; i++)
         {
             if(vieillesse) {
-                this.trace01/*.children[i]*/.fillColor.saturation-=0.01;
-                if(this.trace01/*.children[i]*/.fillColor.saturation<=0) this.trace01/*.children[i]*/.fillColor.saturation=0;
+                this.trace01.children[i].fillColor.saturation-=0.01;
+                if(this.trace01.children[i].fillColor.saturation<=0) this.trace01.children[i].fillColor.saturation=0;
             }
             //console.log(this.trace01.children[i].fillColor.red);
         }
@@ -267,10 +268,13 @@ Forme.prototype.mouseDown = function(mousePoint)
 Forme.prototype.TweenVersCentre = function()
 {
     createjs.Tween.get( this.trace01.position)
-  .to( { x: 100, y: 300 }, 1000, createjs.Ease.quadOut )  
-  .call( function() {
-    console.log( 'done!' );
-  } );
+  .to( { x: 100, y: 300 }, 1000, createjs.Ease.quadOut );
+}
+
+Forme.prototype.TweenDezoom = function()
+{
+    createjs.Tween.get( this.trace01)
+  .to( { scale : 1/grandeEchelle}, 1000, createjs.Ease.quadOut );
 }
 
 Forme.prototype.destroy = function()
