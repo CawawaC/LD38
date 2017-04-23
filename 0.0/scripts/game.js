@@ -1,8 +1,8 @@
 var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false;
 var nombreDeFormesDomestiquesInitiales = 5;
-var vieillesse = true, vieillissementRapide = 0;
+var vieillesse = true, vieillissementRapide = 1;
 var prairie;
-var traceDePrairie;
+//var traceDePrairie;
 var date;
 
 var score;
@@ -29,7 +29,7 @@ window.onload = function ()
     
     largeurCanvas = document.getElementById("gameCanvas").width;
     hauteurCanvas = document.getElementById("gameCanvas").height;
-    prairie = {x: largeurCanvas/2, y: hauteurCanvas*3/4, rayon:150};
+    prairie = {x: largeurCanvas/2, y: hauteurCanvas*3/4, rayon:120};
 
 	// setup paper JS
 	paper.setup('gameCanvas');
@@ -63,9 +63,9 @@ window.onload = function ()
             bg = new Path.Rectangle(new Point(0, 0), new Point(largeur, hauteur));
             
             var offsetx = 0;
-            figure1 = new Path.Rectangle(new Point(0, 0), new Point(10, hauteur));
-            figure2 = new Path.Rectangle(new Point(0, 0), new Point(10, hauteur));
-            figure2.position.x = 32;
+            figure1 = new Path.Rectangle(new Point(0, 0), new Point(5, hauteur));
+            figure2 = new Path.Rectangle(new Point(0, 0), new Point(5, hauteur));
+            figure2.position.x = 15;
 
             bg.fillColor = "white"; 
             bg.fillColor.alpha = 0.01;
@@ -115,7 +115,7 @@ window.onload = function ()
         }
     }
     
-    boutonDePause = new Bouton(300, 100, 30, 50);
+    boutonDePause = new Bouton(320, 30, 20, 20);
     menu = new Bouton(50, 50, 300, 500);
     menu.trace.visible = false;
     menu.traceDeRectangle(200, 400, 300, 500);
@@ -137,13 +137,13 @@ window.onload = function ()
     texteScore.fillColor = 'red';
     texteScore.content  = "Score: 0";
     
-    traceDePrairie = tracerLaPrairie();
+   //traceDePrairie = tracerLaPrairie();
     
     function renouvelerFormeSauvage() {
 //        formeSauvage.destroy();
         formeSauvage.formeAleatoire();
         formeSauvage.trace01.position.x =largeurCanvas/2;
-        formeSauvage.trace01.position.y =300;
+        formeSauvage.trace01.position.y =150;
         
         //TweenVersGauche();
     }
@@ -181,7 +181,7 @@ window.onload = function ()
 	formeSauvage.create();
     formeSauvage.touchable=false;
     formeSauvage.trace01.position.x =largeurCanvas/2;
-    formeSauvage.trace01.position.y =300;
+    formeSauvage.trace01.position.y =150;
     
     var groupeDomestique = [];
     
