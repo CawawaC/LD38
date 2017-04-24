@@ -485,8 +485,15 @@ function restart(){
 }
     
     audioInit();
-    
     createjs.Ticker.setFPS( 60 );
+
+    
+    //Pause au démarrage pause on start
+    menu.trace.visible = true;
+    menu.trace.bringToFront();
+    texteTutoriel.visible = true;
+    texteTutoriel.bringToFront();
+    commencerPause();    
    // createjs.Ticker.addEventListener( 'tick', update );
 }
 
