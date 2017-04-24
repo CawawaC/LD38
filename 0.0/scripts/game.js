@@ -1,5 +1,5 @@
 var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false, gameOver = false;
-var nombreDeFormesDomestiquesInitiales = 5;
+var nombreDeFormesDomestiquesInitiales = 1;
 var vieillesse = true, vieillissementRapide = 5;
 var prairie;
 //var traceDePrairie;
@@ -464,10 +464,10 @@ function tracerLaPrairie() {
     
 function restart(){
     
-   gameOver = false;
+    gameOver = false;
     paused = false;
     score =0;
-      texteScore.content  = score;
+    texteScore.content  = score;
     groupeDomestique = null;
     groupeDomestique = [];
    
