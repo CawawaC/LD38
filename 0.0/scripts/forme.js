@@ -69,10 +69,11 @@ Forme.prototype.creerFormeDomestique = function(couleur = -1, creerTimer = true)
 //    console.info(this.incrementDeVieillessement.valeur);
     
 
-    console.log("programmation du vieillissement");
+   
     if(vieillesse)
-        this.vieillissement = setInterval(desaturation, 100, this.trace01.children[1].fillColor, this.incrementDeVieillessement);
-
+       { this.vieillissement = setInterval(desaturation, 100, this.trace01.children[1].fillColor, this.incrementDeVieillessement);
+     //  console.log("programmation du vieillissement");
+       }
     
     return this.indexDeCouleur;
 
@@ -251,7 +252,7 @@ Forme.prototype.domesticationDeLaSauvage = function() {
 }
 
 function desaturation(couleur, increment) {
-//    console.log(couleur);
+    console.log(increment.valeur);
 //    if(!paused) {
 //        couleur.saturation-=incrementDeVieillessement*vieillissementRapide;
 //        if(couleur.saturation < 0)
@@ -471,6 +472,7 @@ Forme.prototype.destroy = function()
     this.trace01.remove();
     this.touchable = false;
     clearInterval(this.vieillissement);
+     this.incrementDeVieillessement = null;
 }
 
 

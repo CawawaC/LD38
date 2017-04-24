@@ -1,6 +1,6 @@
-var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false;
+var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false, gameOver = false;
 var nombreDeFormesDomestiquesInitiales = 5;
-var vieillesse = true, vieillissementRapide = 1;
+var vieillesse = true, vieillissementRapide = 5;
 var prairie;
 //var traceDePrairie;
 var date;
@@ -120,7 +120,7 @@ window.onload = function ()
     menu = new Bouton(0, 0, 250, 500);
     menu.trace.visible = false;
     menu.traceDeRectangle(175, 300, 275, 500);
-    
+    menu.trace.fillColor="#034049";
     var myPath = new Path();
 myPath.strokeColor = 'white';
     myPath.strokeWeight= 2;
@@ -129,7 +129,7 @@ myPath.add(new Point(325, 300));
     
     texteTutoriel = new paper.PointText(new paper.Point(80, 180));
 //    texteTutoriel = new paper.PointText();
-    texteTutoriel.fillColor = '#015A68';
+    texteTutoriel.fillColor = '#0b91a5';
     texteTutoriel.visible = false;
     texteTutoriel.fontSize = 15;
     texteTutoriel.position.x =180;
@@ -346,6 +346,7 @@ texteTutoriel.justification = 'center';
         
         if(groupeDomestique.length == 0) {
             //Game over
+            gameOver = true;
             menu.trace.visible = true;
             menu.trace.bringToFront();
             texteTutoriel.visible = true;
@@ -393,17 +394,9 @@ texteTutoriel.justification = 'center';
         .wait (500)
           .to( {  x:  largeurCanvas/2 }, 500, createjs.Ease.quadOut ).call(function(){dropAutorise=true;}) ;
     }
-    
-    audioInit();
-    
-    createjs.Ticker.setFPS( 60 );
-   // createjs.Ticker.addEventListener( 'tick', update );
-    
-    toggleMenu();
-    commencerPause();
-}
 
 function clone(obj) {
+
     if (null == obj || "object" != typeof obj) return obj;
     var copy = obj.constructor();
     for (var attr in obj) {
@@ -425,7 +418,10 @@ function finirPause() {
     pauseTime = false;
     pauseMovement = false;
     paused = false;
-    createjs.Ticker.paused = false; 
+    createjs.Ticker.paused = false;
+    
+    if(gameOver)
+        {restart();}
 }
 
 function toggleMenu() {
@@ -435,6 +431,7 @@ function toggleMenu() {
     texteTutoriel.visible = !texteTutoriel.visible;
     texteTutoriel.bringToFront();
 }
+
 
 function tracerLaPrairie() {
 //    var path = new Path.Circle({
@@ -463,13 +460,34 @@ function tracerLaPrairie() {
     return path;
 }
 
-function dessinerPlay() {
-    var triangle = new Path.RegularPolygon({
-        center: [0, 0],
-        sides: 3,
-        radius: 40,
-        fillColor: 'white'
-    });
-    triangle.rotate(90);
-    return triangle;
+    
+    
+function restart(){
+    
+   gameOver = false;
+    paused = false;
+    score =0;
+      texteScore.content  = score;
+    groupeDomestique = null;
+    groupeDomestique = [];
+   
+    for (var i = 0; i < nombreDeFormesDomestiquesInitiales; i++)
+    {
+        var formeDomestique = new Forme();
+        formeDomestique.creerFormeDomestique(i);
+        formeDomestique.placerDansLaPrairie();
+        groupeDomestique.push(formeDomestique);
+       
+    }
+    
+  resetCompteARebours()
+     formeSauvage.trace01.position.x = -100;        
 }
+    
+    audioInit();
+    
+    createjs.Ticker.setFPS( 60 );
+   // createjs.Ticker.addEventListener( 'tick', update );
+}
+
+
