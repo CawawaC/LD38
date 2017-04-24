@@ -1,6 +1,7 @@
 var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false, gameOver = false;
 var nombreDeFormesDomestiquesInitiales = 5;
-var vieillesse = true, vieillissementRapide = 1;
+var vieillesse = true, vieillissementRapide = 0;
+var formesMulticolores = true, rareteDeMulticolore = 6; //Plus rareteDeMulticolore est élevée, moins y en a (à 10, 1 forme sur 10 sera multicolore)
 var prairie;
 //var traceDePrairie;
 var date;
@@ -193,7 +194,7 @@ texteTutoriel.justification = 'center';
     textCompteARebours = new paper.PointText(new paper.Point(150,40));
 //    console.info(compte);
 //    console.info(textCompteARebours.hasFill());
-    textCompteARebours.fillColor =  formeSauvage.trace01.children[1].fillColor;
+    textCompteARebours.fillColor = formeSauvage.trace01.children[1].fillColor;
     textCompteARebours.content = '0';
     textCompteARebours.fontSize =30;
     
@@ -282,7 +283,9 @@ texteTutoriel.justification = 'center';
                     if(!formeGlisse.estDansLaPrairie()) formeGlisse.ramenerDansLaPrairie();
                     formeGlisse.mouseUp(event.point);
                     
-                    formeGlisse.trace01.children[1].fillColor.alpha = 1;
+                    for(var i = 1 ; i < formeGlisse.trace01.children.length ; i++) {
+                        formeGlisse.trace01.children[i].fillColor.alpha = 1;
+                    }
                     
                     score += scoreLocal;
                     texteScore.content = score;
