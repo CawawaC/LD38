@@ -1,6 +1,6 @@
 var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false, gameOver = false;
 var nombreDeFormesDomestiquesInitiales = 5;
-var vieillesse = true, vieillissementRapide = 5;
+var vieillesse = true, vieillissementRapide = 1;
 var prairie;
 //var traceDePrairie;
 var date;
