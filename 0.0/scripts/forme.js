@@ -134,7 +134,9 @@ Forme.prototype.formeAleatoire = function(couleur = -1) {
             var coul = Math.floor(Math.random()*this.colors.length);
             this.indexDeMulticolore.push(coul);
             var _couleurLocale = this.colors[coul]; 
-        } else _couleurLocale = _figureColor;
+        } else {
+            _couleurLocale = _figureColor;
+        }
        // figure = this.creationTrace(_figureName);
         switch(i)
             {
@@ -158,7 +160,8 @@ Forme.prototype.formeAleatoire = function(couleur = -1) {
                  }*/
         this.formesComposantes[i] = index;
         
-        if(formesMulticolores) figure.fillColor = _couleurLocale;
+        /*if(formesMulticolores) */figure.fillColor = _couleurLocale;
+//        else this.trace01.fillColor = _figureColor;
 //        figuresTemp.push(figure);
         
 //        figureUnifiee.unite(figure);
@@ -292,12 +295,19 @@ function desaturation(fig, increment) {
 //            couleur.alpha += incrementDeVieillessement*vieillissementRapide;
 //        else
         
-        for(var i = 1 ; i < fig.children.length ; i++) {
-//            console.log(fig.children[i]);
-            fig.children[i].fillColor.alpha -= increment.valeur*vieillissementRapide;
-            if(fig.children[i].fillColor.alpha < 0)
-                fig.children[i].fillColor.alpha = 0;
-        }
+//        if(formesMulticolores)
+            for(var i = 1 ; i < fig.children.length ; i++) {
+    //            console.log(fig.children[i]);
+                fig.children[i].fillColor.alpha -= increment.valeur*vieillissementRapide;
+                if(fig.children[i].fillColor.alpha < 0)
+                    fig.children[i].fillColor.alpha = 0;
+            }
+//        else {
+//            console.log(fig.fillColor);
+//            fig.fillColor.alpha -= increment.valeur*vieillissementRapide;
+//            if(fig.fillColor.alpha < 0)
+//                fig.fillColor.alpha = 0;
+//        }
     }
 }
 

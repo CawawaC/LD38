@@ -1,6 +1,6 @@
 var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false, gameOver = false;
 var nombreDeFormesDomestiquesInitiales = 5;
-var vieillesse = true, vieillissementRapide = 0;
+var vieillesse = true, vieillissementRapide = 1;
 var formesMulticolores = true, rareteDeMulticolore = 6; //Plus rareteDeMulticolore est élevée, moins y en a (à 10, 1 forme sur 10 sera multicolore)
 var prairie;
 //var traceDePrairie;
