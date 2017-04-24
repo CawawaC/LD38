@@ -253,6 +253,7 @@ class Timbre {
 var notesDeFigures = [32, 34, 36];
 var timbres = [];
 var sonsDeFormes = [];
+var musicOsc, musicLFO1, musicLFO2;
 
 var masterGain;
 var spectrogramme;
@@ -311,6 +312,8 @@ function audioInit() {
         
     var sommeSonsDeFormes = context.createGain();
     
+   
+    
     var filtre = context.createBiquadFilter();
     filtre.type = "peaking";
     filtre.frequency.value = 1300;
@@ -334,6 +337,30 @@ function audioInit() {
     filtre.connect(masterGain);
     masterGain.connect(spectrogramme);
     masterGain.connect(context.destination);
+    
+    
+    /*musicOsc = new Oscillator(context, delay);
+    musicOsc.osc.type = "triangle";
+    musicOsc.setNote(30);
+    
+    musicLFO1 = new Oscillator(context, delay);
+    musicLFO1.envelope.disconnect();
+    musicLFO1.osc.frequency.value = 0.5;
+    musicLFO1.envelope.gain.value = 300;
+
+    musicLFO2 = new Oscillator(context, delay);
+    musicLFO2.envelope.disconnect();
+    musicLFO2.osc.frequency.value = 4.1;
+    musicLFO2.envelope.gain.value = 1;
+    
+    musicFilter = context.createBiquadFilter();
+    musicFilter.type = "peaking";
+    
+    musicLFO1.connect(musicFilter.frequency);
+//    musicLFO2.connect(musicOsc.envelope.gain);
+    musicOsc.envelope.gain.value = 0.5;
+    musicOsc.envelope.connect(musicFilter);
+    musicFilter.connect(delay);*/
     
     
 //    var delay = context.createDelay();
@@ -566,4 +593,8 @@ function feedbackAudioNegatif() {
     oscillateurFeedback.osc.frequency.setValueAtTime(500, context.currentTime);
     oscillateurFeedback.osc.frequency.linearRampToValueAtTime(100, context.currentTime+0.1);
     oscillateurFeedback.envelope.gain.linearRampToValueAtTime(0, context.currentTime+0.1);
+}
+
+function musique() {
+    
 }
