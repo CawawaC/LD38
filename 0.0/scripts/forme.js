@@ -261,8 +261,8 @@ function desaturation(couleur, increment) {
 //        if(vieillissementInverse)
 //            couleur.alpha += incrementDeVieillessement*vieillissementRapide;
 //        else
-        couleur.alpha -= increment.valeur*vieillissementRapide;
         
+        couleur.alpha -= increment.valeur*vieillissementRapide;
         if(couleur.alpha < 0)
             couleur.alpha = 0;
     }
