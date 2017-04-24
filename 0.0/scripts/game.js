@@ -1,5 +1,5 @@
 var /*pause = false, */pauseTime = false, pauseMovement = false, paused = false, gameOver = false;
-var nombreDeFormesDomestiquesInitiales = 1;
+var nombreDeFormesDomestiquesInitiales = 5;
 var vieillesse = true, vieillissementRapide = 5;
 var prairie;
 //var traceDePrairie;
